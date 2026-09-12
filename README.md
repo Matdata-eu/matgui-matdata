@@ -1,6 +1,6 @@
-# Yasgui Matdata
+# MatGUI — Matdata
 
-A simple, clean website to host YASGUI (Yet Another SPARQL GUI) without Node.js or Docker dependencies. This is a pure HTML/CSS/JavaScript implementation that can be deployed easily to any static hosting service.
+A simple, clean website to host **MatGUI** (a modern knowledge graph and SPARQL workbench, formerly *Yasgui*) without Node.js or Docker dependencies. This is a pure HTML/CSS/JavaScript implementation that can be deployed easily to any static hosting service.
 
 🌐 **Live Demo**: [https://yasgui.matdata.eu](https://yasgui.matdata.eu)
 
