@@ -406,6 +406,109 @@ body {
   }
 }
 
+/* Compact modal variant (redirect notice) */
+.modal-content--compact {
+  max-width: 480px;
+  max-height: none;
+}
+
+/* Modal action-button row */
+.redirect-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px 12px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.redirect-checkbox input {
+  width: 16px;
+  height: 16px;
+}
+
+[data-theme="dark"] .redirect-checkbox {
+  color: #d4d4d4;
+}
+
+.modal-actions {
+  padding: 16px 24px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #e0e0e0;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .modal-actions {
+  border-top-color: #3e3e42;
+}
+
+.modal-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  border: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.modal-btn--primary {
+  background-color: #0066cc;
+  color: #ffffff;
+  border-color: #0066cc;
+}
+
+.modal-btn--primary:hover,
+.modal-btn--primary:focus {
+  background-color: #0052a3;
+  border-color: #0052a3;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+[data-theme="dark"] .modal-btn--primary {
+  background-color: #4fc3f7;
+  border-color: #4fc3f7;
+  color: #1a1a1a;
+}
+
+[data-theme="dark"] .modal-btn--primary:hover,
+[data-theme="dark"] .modal-btn--primary:focus {
+  background-color: #81d4fa;
+  border-color: #81d4fa;
+}
+
+.modal-btn--secondary {
+  background-color: transparent;
+  color: #555;
+  border-color: #ccc;
+}
+
+.modal-btn--secondary:hover,
+.modal-btn--secondary:focus {
+  background-color: #f0f0f0;
+  border-color: #aaa;
+  color: #333;
+}
+
+[data-theme="dark"] .modal-btn--secondary {
+  color: #d4d4d4;
+  border-color: #555;
+}
+
+[data-theme="dark"] .modal-btn--secondary:hover,
+[data-theme="dark"] .modal-btn--secondary:focus {
+  background-color: #3e3e42;
+  border-color: #888;
+  color: #ffffff;
+}
+
 /* Responsive modal */
 @media (max-width: 768px) {
   .modal-content {

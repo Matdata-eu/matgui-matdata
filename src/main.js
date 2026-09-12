@@ -1,3 +1,63 @@
+// Show the rename notice when the app is still accessed via the old yasgui.matdata.eu hostname
+(function () {
+  var STORAGE_KEY = "matgui_redirect_notice_dismissed";
+
+  if (window.location.hostname !== "yasgui.matdata.eu") return;
+  if (localStorage.getItem(STORAGE_KEY) === "1") return;
+
+  var modal = document.getElementById("redirect-modal");
+  var closeBtn = document.getElementById("close-redirect-modal");
+  var stayBtn = document.getElementById("stay-redirect-modal");
+  var rememberCheckbox = document.getElementById("redirect-remember-choice");
+
+  if (!modal || !closeBtn || !stayBtn || !rememberCheckbox) return;
+
+  function getFocusable() {
+    return modal.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+  }
+
+  function closeModal() {
+    modal.setAttribute("hidden", "");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    modal.removeEventListener("keydown", trapFocus);
+
+    if (rememberCheckbox.checked) {
+      localStorage.setItem(STORAGE_KEY, "1");
+    }
+  }
+
+  function trapFocus(e) {
+    var els = getFocusable();
+    var first = els[0];
+    var last = els[els.length - 1];
+    if (e.key === "Escape") { closeModal(); return; }
+    if (e.key === "Tab") {
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    }
+  }
+
+  // Open
+  modal.removeAttribute("hidden");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  closeBtn.focus();
+  modal.addEventListener("keydown", trapFocus);
+
+  closeBtn.addEventListener("click", closeModal);
+  stayBtn.addEventListener("click", closeModal);
+  // Close on backdrop click
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) closeModal();
+  });
+})();
+
 // Footer toggle functionality for small screens
 (function () {
   const footer = document.getElementById("footer");

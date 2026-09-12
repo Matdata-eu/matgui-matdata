@@ -101,8 +101,9 @@
         <section>
           <h3>Data Collection</h3>
           <p>
-            <strong>No user data is collected by this website.</strong> We are committed to your privacy and do not track, 
-            store, or process any personal information during your use of this tool.
+            <strong>This website does not use tracking or analytics to monitor your browsing activity.</strong> However, if 
+            you use the URL shortener feature, the shortened links are generated and stored on infrastructure operated by 
+            Matdata, and the service can see the URLs that have been shortened.
           </p>
         </section>
 
@@ -238,6 +239,39 @@
           <h3>License</h3>
           <p>This project is <a href="https://github.com/Matdata-eu/yasgui-matdata" target="_blank" rel="noopener noreferrer">open source</a>. Please refer to individual package licenses for specific terms.</p>
         </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Redirect notice modal (shown only when running on yasgui.matdata.eu) -->
+  <div id="redirect-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="redirect-title" hidden>
+    <div class="modal-content modal-content--compact">
+      <div class="modal-header">
+        <h2 id="redirect-title">This site has a new name</h2>
+        <button id="close-redirect-modal" type="button" class="close-button" aria-label="Close this notice">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <strong>Yasgui has been renamed to MatGUI</strong> — <em>a modern knowledge graph and SPARQL workbench.</em>
+        </p>
+        <p style="margin-top: 12px;">
+          The new home of this application is
+          <a href="https://matgui.matdata.eu" target="_blank" rel="noopener noreferrer">matgui.matdata.eu</a>.
+          Your queries and settings are stored in this browser’s local storage, so they will <strong>not</strong> transfer automatically.
+          The
+          <a href="https://matgui-doc.matdata.eu/docs/user-guide#configuration-importexport" target="_blank" rel="noopener noreferrer">MatGUI User Guide</a>
+          explains how to export your configuration here and import it on the new site.
+        </p>
+      </div>
+      <label class="redirect-checkbox" for="redirect-remember-choice">
+        <input id="redirect-remember-choice" type="checkbox" />
+        <span>Remember my choice</span>
+      </label>
+      <div class="modal-actions">
+        <a href="https://matgui.matdata.eu" class="modal-btn modal-btn--primary">Go to MatGUI</a>
+        <button id="stay-redirect-modal" type="button" class="modal-btn modal-btn--secondary">Stay on this site</button>
       </div>
     </div>
   </div>
