@@ -9,7 +9,6 @@
   var closeBtn = document.getElementById("close-redirect-modal");
   var stayBtn = document.getElementById("stay-redirect-modal");
   var rememberCheckbox = document.getElementById("redirect-remember-choice");
-
   if (!modal || !closeBtn || !stayBtn || !rememberCheckbox) return;
 
   function getFocusable() {
@@ -292,12 +291,12 @@ if (typeof Yasgui !== "undefined") {
   const yasgui = new Yasgui(document.getElementById("yasgui"), {
     // Set the SPARQL endpoint
     requestConfig: {
-      endpoint: "https://dbpedia.org/sparql",
+      endpoint: "https://query.wikidata.org/bigdata/namespace/wdq/sparql",
     },
     // Set alternative SPARQL endpoint quick switch buttons
     endpointButtons: [
-      { endpoint: "https://dbpedia.org/sparql", label: "DBpedia" },
       { endpoint: "https://query.wikidata.org/bigdata/namespace/wdq/sparql", label: "Wikidata" },
+      { endpoint: "https://dbpedia.org/sparql", label: "DBpedia" },
       { endpoint: "https://graph.data.era.europa.eu/repositories/rinf-plus", label: "ERA" }
     ],
 
