@@ -294,10 +294,11 @@ if (typeof Yasgui !== "undefined") {
       endpoint: "https://query.wikidata.org/bigdata/namespace/wdq/sparql",
     },
     // Set alternative SPARQL endpoint quick switch buttons
-    endpointButtons: [
+    endpointButtons: [      
+      { endpoint: "https://graph.data.era.europa.eu/repositories/rinf-plus", label: "ERA" },
+      { endpoint: "https://data.europa.eu/sparql", label: "EU Data" },
       { endpoint: "https://query.wikidata.org/bigdata/namespace/wdq/sparql", label: "Wikidata" },
-      { endpoint: "https://dbpedia.org/sparql", label: "DBpedia" },
-      { endpoint: "https://graph.data.era.europa.eu/repositories/rinf-plus", label: "ERA" }
+      { endpoint: "https://dbpedia.org/sparql", label: "DBpedia" }
     ],
 
     // Allow resizing of the Yasqe editor
@@ -319,6 +320,9 @@ if (typeof Yasgui !== "undefined") {
           {
             endpoint: "https://graph.data.era.europa.eu/repositories/rinf-plus",
           },
+          {
+            endpoint: "https://data.europa.eu/sparql", 
+          },          
           {
             endpoint: "https://dbpedia.org/sparql",
           },
