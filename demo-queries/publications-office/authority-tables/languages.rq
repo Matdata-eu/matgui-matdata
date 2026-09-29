@@ -1,0 +1,16 @@
+#+ name: Languages
+#+ description: The language authority table (ISO 639-based codes used across EU publications).
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+
+SELECT DISTINCT ?concept ?code ?label WHERE {
+  # Each authority table is stored in a named graph with the scheme's IRI;
+  # querying that graph directly is much faster than scanning all graphs.
+  GRAPH <http://publications.europa.eu/resource/authority/language> {
+    ?concept skos:inScheme <http://publications.europa.eu/resource/authority/language> ;
+             skos:prefLabel ?label .
+    FILTER(LANG(?label) = "en")
+    OPTIONAL { ?concept dc:identifier ?code }
+  }
+}
+ORDER BY ?code

@@ -1,0 +1,19 @@
+#+ name: Geometry properties and conversions
+#+ description: Inspects geometries with geof:dimension, geof:isEmpty, geof:convexHull, geof:union and geof:asGeoJSON.
+PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+
+SELECT ?label ?dimension ?hull ?union ?geojson WHERE {
+  VALUES (?label ?a ?b) {
+    ("two squares"
+      "POLYGON((4.0 50.0, 4.1 50.0, 4.1 50.1, 4.0 50.1, 4.0 50.0))"^^geo:wktLiteral
+      "POLYGON((4.05 50.05, 4.15 50.05, 4.15 50.15, 4.05 50.15, 4.05 50.05))"^^geo:wktLiteral)
+    ("point and line"
+      "POINT(4.35 50.85)"^^geo:wktLiteral
+      "LINESTRING(4.30 50.80, 4.40 50.90)"^^geo:wktLiteral)
+  }
+  BIND(geof:dimension(?a)       AS ?dimension)
+  BIND(geof:convexHull(?b)      AS ?hull)
+  BIND(geof:union(?a, ?b)       AS ?union)
+  OPTIONAL { BIND(geof:asGeoJSON(?a) AS ?geojson) }
+}

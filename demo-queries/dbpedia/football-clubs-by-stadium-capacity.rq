@@ -1,0 +1,15 @@
+#+ name: Football clubs by stadium capacity
+#+ description: Belgian football clubs with their home ground and its capacity.
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?club ?ground ?capacity WHERE {
+  ?club a dbo:SoccerClub ;
+        dbo:ground ?ground .
+  ?ground dbo:location|dbo:city ?location ;
+          dbo:seatingCapacity ?capacity .
+  ?location dbo:country dbr:Belgium .
+}
+ORDER BY DESC(?capacity)
+LIMIT 50

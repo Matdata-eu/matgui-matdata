@@ -1,0 +1,34 @@
+#+ name: A dataset and its distributions (graph)
+#+ description: CONSTRUCTs one railway dataset with its publisher and distributions. Open the result in the Graph plugin.
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+CONSTRUCT {
+  ?dataset a dcat:Dataset ;
+           dct:title ?title ;
+           dct:publisher ?publisher ;
+           dcat:distribution ?distribution ;
+           dcat:theme ?theme .
+  ?publisher foaf:name ?publisherName .
+  ?distribution dct:format ?format ;
+                dcat:accessURL ?accessURL .
+}
+WHERE {
+  {
+    SELECT ?dataset WHERE {
+      ?dataset a dcat:Dataset ;
+               dcat:keyword "railway"@en ;
+               dcat:distribution ?d .
+    }
+    LIMIT 1
+  }
+  ?dataset dct:title ?title .
+  OPTIONAL { ?dataset dcat:theme ?theme }
+  OPTIONAL { ?dataset dct:publisher ?publisher . OPTIONAL { ?publisher foaf:name ?publisherName } }
+  OPTIONAL {
+    ?dataset dcat:distribution ?distribution .
+    OPTIONAL { ?distribution dct:format ?format }
+    OPTIONAL { ?distribution dcat:accessURL ?accessURL }
+  }
+}

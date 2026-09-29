@@ -1,0 +1,13 @@
+#+ name: Map: railway stations in Brussels
+#+ description: OSM railway stations inside the Brussels-Capital Region (relation 54094), using QLever's precomputed ogc:sfContains.
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+PREFIX osmrel: <https://www.openstreetmap.org/relation/>
+PREFIX ogc:    <http://www.opengis.net/rdf#>
+PREFIX geo:    <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?station ?name ?geometry WHERE {
+  osmrel:54094 ogc:sfContains ?station .
+  ?station osmkey:railway "station" ;
+           osmkey:name ?name ;
+           geo:hasGeometry/geo:asWKT ?geometry .
+}

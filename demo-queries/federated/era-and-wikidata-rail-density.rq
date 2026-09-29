@@ -1,0 +1,34 @@
+#+ name: ERA + Wikidata: operational points per km²
+#+ description: Counts operational points per country in ERA RINF, then fetches area and population of the same countries from Wikidata. The join key is the ISO 3166 alpha-3 code: ERA uses the EU country authority table, Wikidata property P298.
+PREFIX wd:   <http://www.wikidata.org/entity/>
+PREFIX wdt:  <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX era:  <http://data.europa.eu/949/>
+
+SELECT ?code ?country ?operationalPoints ?areaKm2 ?population ?perThousandKm2 WHERE {
+  # 1. ERA knowledge graph: operational points per country
+  SERVICE <https://graph.data.era.europa.eu/repositories/rinf-plus> {
+    SELECT ?countryIri (COUNT(DISTINCT ?op) AS ?operationalPoints) WHERE {
+      ?op a era:OperationalPoint ;
+          era:inCountry ?countryIri .
+    }
+    GROUP BY ?countryIri
+  }
+  BIND(STRAFTER(STR(?countryIri), "/authority/country/") AS ?code)
+
+  # 2. Wikidata: area and population of European countries
+  SERVICE <https://query.wikidata.org/sparql> {
+    SELECT ?code ?country (MAX(?area) AS ?areaKm2) (MAX(?pop) AS ?population) WHERE {
+      ?item wdt:P31 wd:Q6256 ;
+            wdt:P30 wd:Q46 ;
+            wdt:P298 ?code ;
+            wdt:P2046 ?area ;
+            rdfs:label ?country .
+      OPTIONAL { ?item wdt:P1082 ?pop }
+      FILTER(LANG(?country) = "en")
+    }
+    GROUP BY ?code ?country
+  }
+  BIND(ROUND(1000 * ?operationalPoints / ?areaKm2) AS ?perThousandKm2)
+}
+ORDER BY DESC(?perThousandKm2)

@@ -1,0 +1,15 @@
+#+ name: Longest sections of line
+#+ description: The 50 longest sections of line with the names of the operational points at both ends.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?sol ?from ?to ?length ?country WHERE {
+  ?sol a era:SectionOfLine ;
+       era:lengthOfSectionOfLine ?length ;
+       era:opStart/era:opName ?from ;
+       era:opEnd/era:opName ?to .
+  OPTIONAL { ?sol era:inCountry ?country }
+}
+ORDER BY DESC(?length)
+LIMIT 50

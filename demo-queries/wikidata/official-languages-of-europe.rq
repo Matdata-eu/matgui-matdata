@@ -1,0 +1,19 @@
+#+ name: Official languages of European countries
+#+ description: Which languages are official in which European countries?
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?countryLabel (GROUP_CONCAT(DISTINCT ?languageLabel; separator=", ") AS ?officialLanguages) WHERE {
+  ?country wdt:P31 wd:Q6256 ;
+           wdt:P30 wd:Q46 ;
+           wdt:P37 ?language .
+  ?language rdfs:label ?languageLabel .
+  FILTER(LANG(?languageLabel) = "en")
+  ?country rdfs:label ?countryLabel .
+  FILTER(LANG(?countryLabel) = "en")
+}
+GROUP BY ?countryLabel
+ORDER BY ?countryLabel

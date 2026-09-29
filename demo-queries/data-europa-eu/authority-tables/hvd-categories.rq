@@ -1,0 +1,12 @@
+#+ name: High-value dataset categories
+#+ description: The high-value dataset categories vocabulary with its hierarchy (top categories and sub-categories).
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?category ?label ?parent WHERE {
+  GRAPH <http://data.europa.eu/bna/asd487ae75> {
+    ?category a skos:Concept ;
+              skos:prefLabel ?label .
+    FILTER(LANG(?label) = "en")
+    OPTIONAL { ?category skos:broader ?parent }
+  }
+}

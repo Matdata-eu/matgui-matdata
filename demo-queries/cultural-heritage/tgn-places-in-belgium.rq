@@ -1,0 +1,19 @@
+#+ name: TGN: inhabited places in Belgium
+#+ description: Places in the Getty Thesaurus of Geographic Names that lie in Belgium (tgn:1000063), with coordinates.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX gvp:  <http://vocab.getty.edu/ontology#>
+PREFIX xl:   <http://www.w3.org/2008/05/skos-xl#>
+PREFIX aat:  <http://vocab.getty.edu/aat/>
+PREFIX tgn:  <http://vocab.getty.edu/tgn/>
+PREFIX wgs:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?place ?name ?lat ?long WHERE {
+  ?place gvp:broaderPartitive+ tgn:1000063 ;
+         gvp:placeTypePreferred aat:300008347 ;
+         gvp:prefLabelGVP/xl:literalForm ?name ;
+         foaf:focus ?focus .
+  ?focus wgs:lat ?lat ;
+         wgs:long ?long .
+}
+LIMIT 200

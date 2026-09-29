@@ -1,0 +1,25 @@
+#+ name: Wikidata + GeoSPARQL: distance to Brussels
+#+ description: Fetches the coordinates of Belgian cities from Wikidata and computes their distance to Brussels locally with Jena's spatial functions: remote data, local GeoSPARQL. Also try the Geo plugin.
+PREFIX wd:   <http://www.wikidata.org/entity/>
+PREFIX wdt:  <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:      <http://www.opengis.net/ont/geosparql#>
+PREFIX uom:      <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX spatialF: <http://jena.apache.org/function/spatial#>
+
+SELECT ?city ?population ?coordinates ?distanceKm WHERE {
+  SERVICE <https://query.wikidata.org/sparql> {
+    SELECT ?city (MAX(?pop) AS ?population) (SAMPLE(?coord) AS ?coordinates) WHERE {
+      ?item wdt:P31/wdt:P279* wd:Q515 ;
+            wdt:P17 wd:Q31 ;
+            wdt:P1082 ?pop ;
+            wdt:P625 ?coord ;
+            rdfs:label ?city .
+      FILTER(LANG(?city) = "en" && ?pop > 50000)
+    }
+    GROUP BY ?city
+  }
+  BIND("POINT(4.3517 50.8503)"^^geo:wktLiteral AS ?brussels)
+  BIND(ROUND(spatialF:distance(STRDT(STR(?coordinates), geo:wktLiteral), ?brussels, uom:metre) / 100) / 10 AS ?distanceKm)
+}
+ORDER BY ?distanceKm

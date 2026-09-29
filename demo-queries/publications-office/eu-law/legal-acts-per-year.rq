@@ -1,0 +1,16 @@
+#+ name: Legal acts per year
+#+ description: Number of regulations, directives and decisions adopted per year since 2010.
+PREFIX cdm:  <http://publications.europa.eu/ontology/cdm#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX lang: <http://publications.europa.eu/resource/authority/language/>
+PREFIX rt:   <http://publications.europa.eu/resource/authority/resource-type/>
+
+SELECT ?year ?type (COUNT(DISTINCT ?work) AS ?acts) WHERE {
+  VALUES ?type { rt:REG rt:DIR rt:DEC }
+  ?work cdm:work_has_resource-type ?type ;
+        cdm:work_date_document ?date .
+  FILTER(?date >= "2010-01-01"^^xsd:date)
+  BIND(YEAR(?date) AS ?year)
+}
+GROUP BY ?year ?type
+ORDER BY DESC(?year) ?type

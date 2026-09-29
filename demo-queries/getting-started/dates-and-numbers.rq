@@ -1,0 +1,18 @@
+#+ name: Dates and numbers
+#+ description: Date/time and numeric functions: NOW, YEAR, arithmetic on xsd:date, ROUND and IF.
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?event ?date ?year ?daysAgo ?century ?era WHERE {
+  VALUES (?event ?date) {
+    ("Treaty of Rome signed"            "1957-03-25"^^xsd:date)
+    ("Channel Tunnel opened"            "1994-05-06"^^xsd:date)
+    ("Euro banknotes introduced"        "2002-01-01"^^xsd:date)
+    ("SPARQL 1.1 became a recommendation" "2013-03-21"^^xsd:date)
+  }
+  BIND(YEAR(?date) AS ?year)
+  # Jena supports subtracting dates; the result is an xsd:duration
+  BIND(xsd:date(NOW()) - ?date AS ?daysAgo)
+  BIND(CEIL(?year / 100) AS ?century)
+  BIND(IF(?year < 2000, "20th century", "21st century") AS ?era)
+}
+ORDER BY ?date

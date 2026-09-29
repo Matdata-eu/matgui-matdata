@@ -1,0 +1,18 @@
+#+ name: Area and length of geometries
+#+ description: Computes polygon area and line length in metric units with the GeoSPARQL 1.1 functions geof:area and geof:length.
+PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom:  <http://www.opengis.net/def/uom/OGC/1.0/>
+
+# Geometries in ETRS89 / Belgian Lambert 2008 (EPSG:3812), a metric CRS,
+# so area and length are directly expressed in metres.
+SELECT ?label ?wkt ?area_m2 ?length_m WHERE {
+  VALUES (?label ?wkt) {
+    ("1 km square"
+      "<http://www.opengis.net/def/crs/EPSG/0/3812> POLYGON((650000 670000, 651000 670000, 651000 671000, 650000 671000, 650000 670000))"^^geo:wktLiteral)
+    ("5 km track"
+      "<http://www.opengis.net/def/crs/EPSG/0/3812> LINESTRING(650000 670000, 653000 674000)"^^geo:wktLiteral)
+  }
+  OPTIONAL { BIND(geof:area(?wkt, uom:metre) AS ?area_m2) }
+  OPTIONAL { BIND(geof:length(?wkt, uom:metre) AS ?length_m) }
+}

@@ -1,0 +1,11 @@
+#+ name: Translations of a concept
+#+ description: The preferred label of the EuroVoc concept 'rail transport' in all EU languages.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?language ?label WHERE {
+  ?concept skos:inScheme <http://eurovoc.europa.eu/100141> ;
+           skos:prefLabel "rail transport"@en ;
+           skos:prefLabel ?label .
+  BIND(LANG(?label) AS ?language)
+}
+ORDER BY ?language

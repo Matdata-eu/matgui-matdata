@@ -1,0 +1,11 @@
+#+ name: Data catalogues
+#+ description: Catalogues harvested by data.europa.eu with their title and country.
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+
+SELECT ?catalogue ?title ?spatial WHERE {
+  ?catalogue a dcat:Catalog ;
+             dct:title ?title .
+  OPTIONAL { ?catalogue dct:spatial ?spatial }
+}
+LIMIT 300

@@ -1,0 +1,8 @@
+#+ name: Classes and instance counts
+#+ description: First step on an unknown graph: which classes are used and how many instances does each have?
+SELECT ?class (COUNT(?s) AS ?instances) WHERE {
+  ?s a ?class .
+}
+GROUP BY ?class
+ORDER BY DESC(?instances)
+LIMIT 100

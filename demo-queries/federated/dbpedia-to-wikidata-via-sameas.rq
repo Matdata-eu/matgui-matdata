@@ -1,0 +1,22 @@
+#+ name: DBpedia + Wikidata: follow owl:sameAs
+#+ description: Starts from the DBpedia entry of Brussels, follows the owl:sameAs link to Wikidata and fetches population, area and coordinates there.
+PREFIX wd:   <http://www.wikidata.org/entity/>
+PREFIX wdt:  <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+
+SELECT ?abstract ?wikidataItem ?population ?areaKm2 ?coordinates WHERE {
+  SERVICE <https://dbpedia.org/sparql> {
+    dbr:Brussels owl:sameAs ?wikidataItem .
+    FILTER(STRSTARTS(STR(?wikidataItem), "http://www.wikidata.org/entity/"))
+    OPTIONAL { dbr:Brussels rdfs:comment ?abstract . FILTER(LANG(?abstract) = "en") }
+  }
+  SERVICE <https://query.wikidata.org/sparql> {
+    ?wikidataItem wdt:P1082 ?population ;
+                  wdt:P625 ?coordinates .
+    OPTIONAL { ?wikidataItem wdt:P2046 ?areaKm2 }
+  }
+}
+LIMIT 5

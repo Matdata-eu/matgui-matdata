@@ -1,0 +1,16 @@
+#+ name: Nobel laureates per country of citizenship
+#+ description: Counts Nobel Prize winners per country of citizenship.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?country ?countryLabel (COUNT(DISTINCT ?laureate) AS ?laureates) WHERE {
+  ?laureate wdt:P166/wdt:P279? wd:Q7191 ;
+            wdt:P27 ?country .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }
+}
+GROUP BY ?country ?countryLabel
+ORDER BY DESC(?laureates)
+LIMIT 30

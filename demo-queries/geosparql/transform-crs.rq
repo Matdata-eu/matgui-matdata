@@ -1,0 +1,18 @@
+#+ name: Transform coordinate reference system
+#+ description: Transforms WGS84 points to ETRS89 / UTM zone 32N with spatialF:transformSRS. From the apache-jena-fuseki-geosparql examples.
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX spatialf: <http://jena.apache.org/function/spatial#>
+
+# Test transforming between coordinate systems using Jena vendor functions
+SELECT * WHERE {  
+  VALUES (?test_name ?lat ?lon) {
+    ("Amsterdam Central" 52.3791 4.9003)
+    ("Rotterdam Port" 51.9225 4.4792)
+    ("Utrecht Center" 52.0907 5.1214)
+  }
+    # Create point geometry from coordinates
+  BIND(STRDT(CONCAT("<http://www.opengis.net/def/crs/EPSG/0/4326> POINT(", STR(?lat), " ", STR(?lon), ")"), geo:wktLiteral) AS ?point_wgs84)
+  BIND(spatialf:transformSRS(?point_wgs84, "http://www.opengis.net/def/crs/EPSG/0/25832") as ?point_utm_zone_32N)
+}
+ORDER BY ?test_name

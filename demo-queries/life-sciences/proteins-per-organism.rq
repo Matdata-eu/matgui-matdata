@@ -1,0 +1,15 @@
+#+ name: Reviewed proteins per model organism
+#+ description: Counts reviewed UniProt entries for a handful of model organisms.
+PREFIX up:    <http://purl.uniprot.org/core/>
+PREFIX taxon: <http://purl.uniprot.org/taxonomy/>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?organism ?name (COUNT(?protein) AS ?proteins) WHERE {
+  VALUES ?organism { taxon:9606 taxon:10090 taxon:7227 taxon:6239 taxon:559292 taxon:83333 taxon:3702 }
+  ?protein a up:Protein ;
+           up:reviewed true ;
+           up:organism ?organism .
+  ?organism up:scientificName ?name .
+}
+GROUP BY ?organism ?name
+ORDER BY DESC(?proteins)

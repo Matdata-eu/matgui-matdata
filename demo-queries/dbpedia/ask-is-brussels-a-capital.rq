@@ -1,0 +1,9 @@
+#+ name: ASK: is Brussels a capital?
+#+ description: An ASK query returns true or false. Checks whether some country has Brussels as its capital.
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+ASK {
+  ?country dbo:capital dbr:Brussels .
+}

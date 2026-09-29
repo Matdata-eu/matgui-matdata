@@ -1,0 +1,14 @@
+#+ name: GDPR in all languages
+#+ description: Looks up a legal act by CELEX number (32016R0679, the GDPR) and lists its title in every language version.
+PREFIX cdm:  <http://publications.europa.eu/ontology/cdm#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX lang: <http://publications.europa.eu/resource/authority/language/>
+PREFIX rt:   <http://publications.europa.eu/resource/authority/resource-type/>
+
+SELECT ?language ?title WHERE {
+  ?work cdm:resource_legal_id_celex "32016R0679"^^xsd:string .
+  ?expression cdm:expression_belongs_to_work ?work ;
+              cdm:expression_uses_language ?language ;
+              cdm:expression_title ?title .
+}
+ORDER BY ?language

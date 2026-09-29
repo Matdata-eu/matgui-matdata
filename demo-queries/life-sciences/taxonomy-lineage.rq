@@ -1,0 +1,11 @@
+#+ name: Taxonomic lineage
+#+ description: The full taxonomic lineage of the honey bee (Apis mellifera, taxon 7460) using a property path.
+PREFIX up:    <http://purl.uniprot.org/core/>
+PREFIX taxon: <http://purl.uniprot.org/taxonomy/>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?ancestor ?name ?rank WHERE {
+  taxon:7460 rdfs:subClassOf+ ?ancestor .
+  ?ancestor up:scientificName ?name .
+  OPTIONAL { ?ancestor up:rank ?rank }
+}

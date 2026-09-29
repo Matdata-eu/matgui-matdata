@@ -1,0 +1,14 @@
+#+ name: Reviewed human proteins
+#+ description: Swiss-Prot (reviewed) proteins of Homo sapiens with their mnemonic and recommended name.
+PREFIX up:    <http://purl.uniprot.org/core/>
+PREFIX taxon: <http://purl.uniprot.org/taxonomy/>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?protein ?mnemonic ?name WHERE {
+  ?protein a up:Protein ;
+           up:reviewed true ;
+           up:organism taxon:9606 ;
+           up:mnemonic ?mnemonic ;
+           up:recommendedName/up:fullName ?name .
+}
+LIMIT 100

@@ -1,0 +1,28 @@
+#+ name: Who influenced whom: philosophers
+#+ description: Wikidata: 'influenced by' (P737) network between well-known philosophers, with their portraits as node images.
+#+ endpoint: wikidata
+PREFIX wd:     <http://www.wikidata.org/entity/>
+PREFIX wdt:    <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+PREFIX ex:     <https://example.org/philosophy#>
+
+CONSTRUCT {
+  ?a ex:influencedBy ?b .
+  ?a rdfs:label ?aName ; schema:image ?aImage .
+  ?b rdfs:label ?bName ; schema:image ?bImage .
+}
+WHERE {
+  VALUES ?aName { "Plato"@en "Aristotle"@en "René Descartes"@en "Baruch Spinoza"@en "John Locke"@en
+                  "David Hume"@en "Immanuel Kant"@en "Georg Wilhelm Friedrich Hegel"@en
+                  "Arthur Schopenhauer"@en "Karl Marx"@en "Friedrich Nietzsche"@en "Ludwig Wittgenstein"@en }
+  VALUES ?bName { "Plato"@en "Aristotle"@en "René Descartes"@en "Baruch Spinoza"@en "John Locke"@en
+                  "David Hume"@en "Immanuel Kant"@en "Georg Wilhelm Friedrich Hegel"@en
+                  "Arthur Schopenhauer"@en "Karl Marx"@en "Friedrich Nietzsche"@en "Ludwig Wittgenstein"@en }
+  # Q4964182 = philosopher; looking people up by label avoids hard-coding item IDs
+  ?a rdfs:label ?aName ; wdt:P106 wd:Q4964182 .
+  ?b rdfs:label ?bName ; wdt:P106 wd:Q4964182 .
+  ?a wdt:P737 ?b .
+  OPTIONAL { ?a wdt:P18 ?aImage }
+  OPTIONAL { ?b wdt:P18 ?bImage }
+}

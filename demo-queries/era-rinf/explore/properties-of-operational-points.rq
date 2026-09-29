@@ -1,0 +1,12 @@
+#+ name: Properties used by operational points
+#+ description: Lists every property used on era:OperationalPoint resources with how often it occurs.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?property (COUNT(*) AS ?usage) WHERE {
+  ?op a era:OperationalPoint ;
+      ?property ?value .
+}
+GROUP BY ?property
+ORDER BY DESC(?usage)

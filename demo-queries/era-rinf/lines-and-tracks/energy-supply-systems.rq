@@ -1,0 +1,14 @@
+#+ name: Energy supply systems
+#+ description: Counts tracks per energy supply system (e.g. AC 25kV-50Hz, DC 3kV) via their contact line system.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?system ?systemLabel (COUNT(DISTINCT ?track) AS ?tracks) WHERE {
+  ?track a era:Track ;
+         era:contactLineSystem ?cls .
+  ?cls era:energySupplySystem ?system .
+  OPTIONAL { ?system skos:prefLabel ?systemLabel . FILTER(LANGMATCHES(LANG(?systemLabel), "en")) }
+}
+GROUP BY ?system ?systemLabel
+ORDER BY DESC(?tracks)

@@ -1,0 +1,22 @@
+#+ name: CONSTRUCT a small graph
+#+ description: Builds RDF triples from inline data. Open the result in the Graph plugin to see the network.
+PREFIX ex:   <https://example.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# A tiny railway network: stations and the lines connecting them.
+CONSTRUCT {
+  ?from a ex:Station ; rdfs:label ?fromLabel ; ex:connectedTo ?to .
+  ?to   a ex:Station ; rdfs:label ?toLabel .
+}
+WHERE {
+  VALUES (?fromLabel ?toLabel) {
+    ("Brussels-South" "Antwerp-Central")
+    ("Brussels-South" "Liège-Guillemins")
+    ("Brussels-South" "Lille-Europe")
+    ("Antwerp-Central" "Rotterdam Centraal")
+    ("Liège-Guillemins" "Aachen Hbf")
+    ("Lille-Europe" "Paris-Nord")
+  }
+  BIND(IRI(CONCAT(STR(ex:), "station/", ENCODE_FOR_URI(?fromLabel))) AS ?from)
+  BIND(IRI(CONCAT(STR(ex:), "station/", ENCODE_FOR_URI(?toLabel)))   AS ?to)
+}

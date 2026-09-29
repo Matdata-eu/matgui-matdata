@@ -1,0 +1,101 @@
+name: Demo queries
+
+# Validates the demo queries in demo-queries/, runs them against their public
+# endpoints, and (on main) uploads them to the matgui-demo Jena dataset that
+# backs the "MatGUI demo queries" workspace on https://matgui.matdata.eu.
+#
+# Required repository secrets for publishing:
+#   JENA_USERNAME / JENA_PASSWORD  - credentials allowed to write to the dataset
+# Optional repository variable:
+#   JENA_DATASET_URL               - defaults to https://jena.matdata.eu/matgui-demo
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "demo-queries/**"
+      - "scripts/demo_queries.py"
+      - ".github/workflows/demo-queries.yml"
+  pull_request:
+    paths:
+      - "demo-queries/**"
+      - "scripts/demo_queries.py"
+      - ".github/workflows/demo-queries.yml"
+  workflow_dispatch:
+    inputs:
+      smoke_test:
+        description: "Run every query against its endpoint"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: demo-queries-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # git history is used for the dcterms:created timestamps
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install "rdflib>=7,<8"
+
+      - name: Validate query syntax and metadata
+        run: python scripts/demo_queries.py validate
+
+      - name: Build workspace RDF
+        run: python scripts/demo_queries.py build --out build/matgui-demo.ttl
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: matgui-demo-workspace
+          path: build/matgui-demo.ttl
+
+  smoke-test:
+    # Public endpoints are sometimes slow or down, so failures are reported in the
+    # job summary but do not block publishing.
+    if: github.event_name != 'schedule' && (github.event_name != 'workflow_dispatch' || inputs.smoke_test)
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run every query against its endpoint
+        run: python scripts/demo_queries.py smoke-test --timeout 90
+
+  publish:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: matgui-demo-workspace
+          path: build
+
+      - name: Upload to Jena
+        env:
+          JENA_DATASET_URL: ${{ vars.JENA_DATASET_URL || 'https://jena.matdata.eu/matgui-demo' }}
+          JENA_USERNAME: ${{ secrets.JENA_USERNAME }}
+          JENA_PASSWORD: ${{ secrets.JENA_PASSWORD }}
+        run: python scripts/demo_queries.py publish --file build/matgui-demo.ttl

@@ -1,0 +1,12 @@
+#+ name: Describe an operational point
+#+ description: DESCRIBE returns all triples about a resource. Shows one Belgian operational point; switch to the Graph plugin to explore it.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX country: <http://publications.europa.eu/resource/authority/country/>
+
+DESCRIBE ?op WHERE {
+  ?op a era:OperationalPoint ;
+      era:inCountry country:BEL .
+}
+LIMIT 1

@@ -1,0 +1,13 @@
+#+ name: Map: railway lines in Luxembourg
+#+ description: Rail track geometries (railway=rail) in Luxembourg (relation 2171347), drawn as lines.
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+PREFIX osmrel: <https://www.openstreetmap.org/relation/>
+PREFIX ogc:    <http://www.opengis.net/rdf#>
+PREFIX geo:    <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?way ?name ?geometry WHERE {
+  osmrel:2171347 ogc:sfContains ?way .
+  ?way osmkey:railway "rail" ;
+       geo:hasGeometry/geo:asWKT ?geometry .
+  OPTIONAL { ?way osmkey:name ?name }
+}

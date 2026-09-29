@@ -1,0 +1,21 @@
+#+ name: Nearest station to a point
+#+ description: Ranks stations by distance to a given location using spatialF:distance and returns the closest ones.
+PREFIX geo:      <http://www.opengis.net/ont/geosparql#>
+PREFIX uom:      <http://www.opengis.net/def/uom/OGC/1.0/>
+PREFIX spatialF: <http://jena.apache.org/function/spatial#>
+
+SELECT ?station ?location ?distance_km WHERE {
+  # Where am I? (Grand-Place, Brussels)
+  BIND("POINT(4.3525 50.8467)"^^geo:wktLiteral AS ?here)
+
+  VALUES (?station ?location) {
+    ("Brussels-Central" "POINT(4.3571 50.8455)"^^geo:wktLiteral)
+    ("Brussels-North"   "POINT(4.3606 50.8603)"^^geo:wktLiteral)
+    ("Brussels-South"   "POINT(4.3360 50.8358)"^^geo:wktLiteral)
+    ("Brussels-Luxembourg" "POINT(4.3739 50.8383)"^^geo:wktLiteral)
+    ("Brussels-Schuman" "POINT(4.3806 50.8431)"^^geo:wktLiteral)
+  }
+  BIND(ROUND(spatialF:distance(?here, ?location, uom:metre)) / 1000 AS ?distance_km)
+}
+ORDER BY ?distance_km
+LIMIT 3

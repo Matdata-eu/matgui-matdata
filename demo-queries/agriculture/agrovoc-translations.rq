@@ -1,0 +1,10 @@
+#+ name: Translations of an AGROVOC concept
+#+ description: Preferred labels of the concept 'maize' (c_12332) in all available languages.
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+
+SELECT ?language ?label WHERE {
+  <http://aims.fao.org/aos/agrovoc/c_12332> skosxl:prefLabel/skosxl:literalForm ?label .
+  BIND(LANG(?label) AS ?language)
+}
+ORDER BY ?language

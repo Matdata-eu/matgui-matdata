@@ -1,0 +1,13 @@
+#+ name: DESCRIBE and expand
+#+ description: DESCRIBE returns all triples about a resource: here the main station of Luxembourg in ERA RINF. Open the Graph tab and double-click a blue node (a track, a section of line, ...): the plugin sends a DESCRIBE for it and merges the result into the graph.
+#+ endpoint: era
+PREFIX era:     <http://data.europa.eu/949/>
+PREFIX country: <http://publications.europa.eu/resource/authority/country/>
+
+DESCRIBE ?op WHERE {
+  ?op a era:OperationalPoint ;
+      era:inCountry country:LUX ;
+      era:opName ?name .
+  FILTER(LCASE(STR(?name)) = "luxembourg")
+}
+LIMIT 1

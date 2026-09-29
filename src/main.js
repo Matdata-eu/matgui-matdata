@@ -478,6 +478,45 @@ if (typeof Yasgui !== "undefined") {
 
   });
 
+  // Demo queries workspace (read-only SPARQL workspace, published from demo-queries/ by a GitHub workflow)
+  (function () {
+    var DEMO_WORKSPACE = {
+      id: "matgui-demo",
+      label: "MatGUI demo queries",
+      description: "Example queries for ERA RINF, EU Publications Office, data.europa.eu, GeoSPARQL, Wikidata and more",
+      type: "sparql",
+      endpoint: "https://jena.matdata.eu/matgui-demo/sparql",
+      workspaceIri: "https://matgui.matdata.eu/demo/workspace",
+    };
+    var REGISTERED_KEY = "matgui_demo_workspace_registered";
+    var config = yasgui.persistentConfig;
+    if (!config || typeof config.addOrUpdateWorkspace !== "function") return;
+
+    var existing = config.getWorkspace(DEMO_WORKSPACE.id);
+    var registeredBefore = false;
+    try { registeredBefore = localStorage.getItem(REGISTERED_KEY) === "1"; } catch (e) {}
+
+    // Add it once; keep it up to date afterwards, but respect users who removed it.
+    if (existing || !registeredBefore) {
+      config.addOrUpdateWorkspace(DEMO_WORKSPACE);
+      try { localStorage.setItem(REGISTERED_KEY, "1"); } catch (e) {}
+    }
+    if (!config.getActiveWorkspaceId()) {
+      config.setActiveWorkspaceId(DEMO_WORKSPACE.id);
+    }
+
+    var demoBtn = document.getElementById("demo-queries-btn");
+    if (!demoBtn || !yasgui.queryBrowser) return;
+    demoBtn.addEventListener("click", function () {
+      if (!config.getWorkspace(DEMO_WORKSPACE.id)) config.addOrUpdateWorkspace(DEMO_WORKSPACE);
+      config.setActiveWorkspaceId(DEMO_WORKSPACE.id);
+      // Make the query browser switch to the demo workspace if it was showing another one
+      yasgui.queryBrowser.selectedWorkspaceId = DEMO_WORKSPACE.id;
+      yasgui.queryBrowser.invalidateAndRefresh();
+      yasgui.queryBrowser.open(demoBtn);
+    });
+  })();
+
   // Sync theme immediately after initialization
   syncThemeWithBody();
 

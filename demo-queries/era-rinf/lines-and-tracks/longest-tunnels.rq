@@ -1,0 +1,14 @@
+#+ name: Longest tunnels
+#+ description: The longest railway tunnels registered in RINF.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?tunnel ?label ?length ?country WHERE {
+  ?tunnel a era:Tunnel ;
+          era:lengthOfTunnel ?length .
+  OPTIONAL { ?tunnel rdfs:label ?label }
+  OPTIONAL { ?tunnel era:inCountry ?country }
+}
+ORDER BY DESC(?length)
+LIMIT 50

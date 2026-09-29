@@ -1,0 +1,13 @@
+#+ name: String functions
+#+ description: BIND together with common SPARQL string functions (UCASE, STRLEN, SUBSTR, REPLACE, CONCAT, ENCODE_FOR_URI).
+SELECT ?city ?upper ?length ?firstThree ?noSpaces ?slug ?iri WHERE {
+  VALUES ?city { "Brussels" "Den Haag" "Frankfurt am Main" "Luxembourg" }
+
+  BIND(UCASE(?city)                          AS ?upper)
+  BIND(STRLEN(?city)                         AS ?length)
+  BIND(SUBSTR(?city, 1, 3)                   AS ?firstThree)
+  BIND(REPLACE(?city, " ", "")               AS ?noSpaces)
+  BIND(LCASE(REPLACE(?city, " ", "-"))       AS ?slug)
+  BIND(IRI(CONCAT("https://example.org/city/", ENCODE_FOR_URI(?slug))) AS ?iri)
+}
+ORDER BY ?length

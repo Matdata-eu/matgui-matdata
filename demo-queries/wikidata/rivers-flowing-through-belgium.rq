@@ -1,0 +1,17 @@
+#+ name: Rivers flowing through Belgium
+#+ description: Rivers located in Belgium with their length and the body of water they flow into.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?river ?riverLabel ?length ?mouthLabel WHERE {
+  ?river wdt:P31/wdt:P279* wd:Q4022 ;
+         wdt:P17 wd:Q31 .
+  OPTIONAL { ?river wdt:P2043 ?length }
+  OPTIONAL { ?river wdt:P403 ?mouth }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }
+}
+ORDER BY DESC(?length)
+LIMIT 50

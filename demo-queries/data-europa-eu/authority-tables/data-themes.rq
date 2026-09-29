@@ -1,0 +1,12 @@
+#+ name: Data themes
+#+ description: The DCAT-AP data themes (authority table data-theme) in English, French and German. data.europa.eu keeps each vocabulary in a named graph with the same IRI as the concept scheme.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?theme ?en ?fr ?de WHERE {
+  GRAPH <http://publications.europa.eu/resource/authority/data-theme> {
+    ?theme a skos:Concept .
+    OPTIONAL { ?theme skos:prefLabel ?en . FILTER(LANG(?en) = "en") }
+    OPTIONAL { ?theme skos:prefLabel ?fr . FILTER(LANG(?fr) = "fr") }
+    OPTIONAL { ?theme skos:prefLabel ?de . FILTER(LANG(?de) = "de") }
+  }
+}

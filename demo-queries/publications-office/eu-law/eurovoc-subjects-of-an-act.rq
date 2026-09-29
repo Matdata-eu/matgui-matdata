@@ -1,0 +1,15 @@
+#+ name: EuroVoc subjects of an act
+#+ description: The EuroVoc concepts a legal act is about (here the GDPR), in English.
+PREFIX cdm:  <http://publications.europa.eu/ontology/cdm#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX lang: <http://publications.europa.eu/resource/authority/language/>
+PREFIX rt:   <http://publications.europa.eu/resource/authority/resource-type/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?concept ?label WHERE {
+  ?work cdm:resource_legal_id_celex "32016R0679"^^xsd:string ;
+        cdm:work_is_about_concept_eurovoc ?concept .
+  ?concept skos:prefLabel ?label .
+  FILTER(LANG(?label) = "en")
+}
+ORDER BY ?label

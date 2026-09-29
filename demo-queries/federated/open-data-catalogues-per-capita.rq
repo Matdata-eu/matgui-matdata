@@ -1,0 +1,31 @@
+#+ name: data.europa.eu + Wikidata: open data catalogues per country
+#+ description: Counts the catalogues harvested by data.europa.eu per country (dct:spatial) and relates them to the population from Wikidata.
+PREFIX wd:   <http://www.wikidata.org/entity/>
+PREFIX wdt:  <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+
+SELECT ?code ?country ?catalogues ?population ?cataloguesPerMillion WHERE {
+  SERVICE <https://data.europa.eu/sparql> {
+    SELECT ?spatial (COUNT(DISTINCT ?catalogue) AS ?catalogues) WHERE {
+      ?catalogue a dcat:Catalog ;
+                 dct:spatial ?spatial .
+      FILTER(STRSTARTS(STR(?spatial), "http://publications.europa.eu/resource/authority/country/"))
+    }
+    GROUP BY ?spatial
+  }
+  BIND(STRAFTER(STR(?spatial), "/authority/country/") AS ?code)
+  SERVICE <https://query.wikidata.org/sparql> {
+    SELECT ?code ?country (MAX(?pop) AS ?population) WHERE {
+      ?item wdt:P31 wd:Q6256 ;
+            wdt:P298 ?code ;
+            wdt:P1082 ?pop ;
+            rdfs:label ?country .
+      FILTER(LANG(?country) = "en")
+    }
+    GROUP BY ?code ?country
+  }
+  BIND(ROUND(10 * ?catalogues / (?population / 1000000)) / 10 AS ?cataloguesPerMillion)
+}
+ORDER BY DESC(?catalogues)

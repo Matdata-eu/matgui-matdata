@@ -1,0 +1,18 @@
+#+ name: Map: castles in Belgium
+#+ description: Castles located in Belgium with their coordinates, built as WKT points from geo:lat/geo:long.
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX gsp:  <http://www.opengis.net/ont/geosparql#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX dbc:  <http://dbpedia.org/resource/Category:>
+
+SELECT ?castle ?name ?wkt WHERE {
+  ?castle dct:subject/<http://www.w3.org/2004/02/skos/core#broader>? dbc:Castles_in_Belgium ;
+          rdfs:label ?name ;
+          geo:lat ?lat ;
+          geo:long ?long .
+  FILTER(LANG(?name) = "en")
+  BIND(STRDT(CONCAT("POINT(", STR(?long), " ", STR(?lat), ")"), gsp:wktLiteral) AS ?wkt)
+}

@@ -1,0 +1,10 @@
+#+ name: Properties used by tracks
+#+ description: Lists every property used on era:Track resources (speed, contact line, train protection, ...) with how often it occurs.
+PREFIX era:  <http://data.europa.eu/949/>
+
+SELECT ?property (COUNT(*) AS ?usage) WHERE {
+  ?track a era:Track ;
+         ?property ?value .
+}
+GROUP BY ?property
+ORDER BY DESC(?usage)

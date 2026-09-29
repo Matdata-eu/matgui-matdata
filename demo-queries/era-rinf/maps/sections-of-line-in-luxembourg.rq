@@ -1,0 +1,48 @@
+#+ name: Map: sections of line in Luxembourg
+#+ description: Sections of line in Luxembourg drawn as straight lines between their start and end operational points.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX wgs:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX country: <http://publications.europa.eu/resource/authority/country/>
+
+SELECT ?sol ?from ?to ?length ?wkt WHERE {
+  ?sol a era:SectionOfLine ;
+       era:inCountry country:LUX ;
+       era:opStart ?start ;
+       era:opEnd ?end .
+  OPTIONAL { ?sol era:lengthOfSectionOfLine ?length }
+  ?start era:opName ?from .
+  ?end   era:opName ?to .
+  { SELECT ?start (SAMPLE(?a) AS ?startXY) WHERE {
+    ?start a era:OperationalPoint ;
+      era:inCountry country:LUX .
+    {
+      # WKT (typed or plain string) on the resource or on a linked geometry node
+      { ?start ?aP ?aWkt . } UNION { ?start ?aP ?aG . ?aG ?aQ ?aWkt . }
+      FILTER(isLiteral(?aWkt) && REGEX(STR(?aWkt), "POINT\\s*\\(", "i"))
+      BIND(REPLACE(STR(?aWkt), "^.*POINT\\s*\\(\\s*([-0-9.eE]+)\\s+([-0-9.eE]+).*$", "$1 $2", "i") AS ?a)
+    } UNION {
+      # W3C WGS84 lat/long, directly or via a location node
+      { ?start wgs:lat ?aLat ; wgs:long ?aLong . }
+      UNION { ?start ?aP ?aG . ?aG wgs:lat ?aLat ; wgs:long ?aLong . }
+      BIND(CONCAT(STR(?aLong), " ", STR(?aLat)) AS ?a)
+    }
+  } GROUP BY ?start }
+  { SELECT ?end (SAMPLE(?b) AS ?endXY) WHERE {
+    ?end a era:OperationalPoint ;
+      era:inCountry country:LUX .
+    {
+      # WKT (typed or plain string) on the resource or on a linked geometry node
+      { ?end ?bP ?bWkt . } UNION { ?end ?bP ?bG . ?bG ?bQ ?bWkt . }
+      FILTER(isLiteral(?bWkt) && REGEX(STR(?bWkt), "POINT\\s*\\(", "i"))
+      BIND(REPLACE(STR(?bWkt), "^.*POINT\\s*\\(\\s*([-0-9.eE]+)\\s+([-0-9.eE]+).*$", "$1 $2", "i") AS ?b)
+    } UNION {
+      # W3C WGS84 lat/long, directly or via a location node
+      { ?end wgs:lat ?bLat ; wgs:long ?bLong . }
+      UNION { ?end ?bP ?bG . ?bG wgs:lat ?bLat ; wgs:long ?bLong . }
+      BIND(CONCAT(STR(?bLong), " ", STR(?bLat)) AS ?b)
+    }
+  } GROUP BY ?end }
+  BIND(STRDT(CONCAT("LINESTRING(", ?startXY, ", ", ?endXY, ")"), geo:wktLiteral) AS ?wkt)
+}

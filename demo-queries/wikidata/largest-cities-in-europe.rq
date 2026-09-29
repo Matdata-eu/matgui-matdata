@@ -1,0 +1,18 @@
+#+ name: Largest cities in Europe
+#+ description: Cities in Europe with more than one million inhabitants.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?city ?cityLabel ?countryLabel ?population WHERE {
+  ?city wdt:P31/wdt:P279* wd:Q515 ;
+        wdt:P17 ?country ;
+        wdt:P1082 ?population .
+  ?country wdt:P30 wd:Q46 .
+  FILTER(?population > 1000000)
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }
+}
+ORDER BY DESC(?population)
+LIMIT 50

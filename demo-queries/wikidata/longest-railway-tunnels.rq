@@ -1,0 +1,16 @@
+#+ name: Longest railway tunnels
+#+ description: The world's longest railway tunnels according to Wikidata.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?tunnel ?tunnelLabel ?countryLabel ?length WHERE {
+  ?tunnel wdt:P31/wdt:P279* wd:Q1311958 ;
+          wdt:P2043 ?length .
+  OPTIONAL { ?tunnel wdt:P17 ?country }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }
+}
+ORDER BY DESC(?length)
+LIMIT 30

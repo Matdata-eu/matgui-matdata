@@ -1,0 +1,21 @@
+#+ name: EuroVoc: neighbourhood of 'rail transport'
+#+ description: Publications Office: broader, narrower and related concepts of the EuroVoc concept 'rail transport'. The SKOS predicates are shown as compact edge icons (up, down, related).
+#+ endpoint: op
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+  ?concept ?relation ?other .
+  ?concept rdfs:label ?label .
+  ?other   rdfs:label ?otherLabel .
+}
+WHERE {
+  ?concept skos:inScheme <http://eurovoc.europa.eu/100141> ;
+           skos:prefLabel "rail transport"@en ;
+           skos:prefLabel ?label .
+  FILTER(LANG(?label) = "en")
+  VALUES ?relation { skos:broader skos:narrower skos:related }
+  ?concept ?relation ?other .
+  ?other skos:prefLabel ?otherLabel .
+  FILTER(LANG(?otherLabel) = "en")
+}

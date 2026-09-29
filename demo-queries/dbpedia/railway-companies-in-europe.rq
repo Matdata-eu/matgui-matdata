@@ -1,0 +1,16 @@
+#+ name: European railway companies
+#+ description: Railway companies from DBpedia with their country and founding year.
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?company ?name ?country ?founded WHERE {
+  ?company a dbo:Company ;
+           dbo:industry dbr:Rail_transport ;
+           rdfs:label ?name .
+  FILTER(LANG(?name) = "en")
+  OPTIONAL { ?company dbo:locationCountry ?country }
+  OPTIONAL { ?company dbo:foundingYear ?founded }
+}
+ORDER BY ?name
+LIMIT 200

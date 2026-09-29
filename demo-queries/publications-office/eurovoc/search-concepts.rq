@@ -1,0 +1,15 @@
+#+ name: Search EuroVoc concepts
+#+ description: Finds EuroVoc concepts whose English label contains a word, with their broader concept.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?concept ?label ?broaderLabel WHERE {
+  ?concept skos:inScheme <http://eurovoc.europa.eu/100141> ;
+           skos:prefLabel ?label .
+  FILTER(LANG(?label) = "en" && CONTAINS(LCASE(STR(?label)), "railway"))
+  OPTIONAL {
+    ?concept skos:broader ?broader .
+    ?broader skos:prefLabel ?broaderLabel .
+    FILTER(LANG(?broaderLabel) = "en")
+  }
+}
+ORDER BY ?label

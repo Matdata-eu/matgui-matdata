@@ -1,0 +1,18 @@
+#+ name: Latest regulations
+#+ description: The 50 most recent EU regulations in Cellar with their CELEX number and English title.
+PREFIX cdm:  <http://publications.europa.eu/ontology/cdm#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX lang: <http://publications.europa.eu/resource/authority/language/>
+PREFIX rt:   <http://publications.europa.eu/resource/authority/resource-type/>
+
+SELECT ?work ?celex ?date ?title WHERE {
+  ?work cdm:work_has_resource-type rt:REG ;
+        cdm:resource_legal_id_celex ?celex ;
+        cdm:work_date_document ?date .
+  FILTER(?date >= "2025-01-01"^^xsd:date)
+  ?expression cdm:expression_belongs_to_work ?work ;
+              cdm:expression_uses_language lang:ENG ;
+              cdm:expression_title ?title .
+}
+ORDER BY DESC(?date)
+LIMIT 50

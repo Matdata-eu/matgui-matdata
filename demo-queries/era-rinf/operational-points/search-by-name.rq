@@ -1,0 +1,15 @@
+#+ name: Search operational points by name
+#+ description: Case-insensitive name search. Change the search string to find any station or junction in Europe.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?op ?name ?uopid ?country WHERE {
+  ?op a era:OperationalPoint ;
+      era:opName ?name .
+  FILTER(CONTAINS(LCASE(STR(?name)), "brussel"))
+  OPTIONAL { ?op era:uopid ?uopid }
+  OPTIONAL { ?op era:inCountry ?country }
+}
+ORDER BY ?name
+LIMIT 100
