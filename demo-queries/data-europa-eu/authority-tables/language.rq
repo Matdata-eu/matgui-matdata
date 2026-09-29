@@ -3,7 +3,7 @@
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 SELECT DISTINCT ?theme ?en ?fr ?de WHERE {
-  GRAPH <http://publications.europa.eu/resource/authority/data-theme> {
+  GRAPH <http://publications.europa.eu/resource/authority/language> {
     ?theme a skos:Concept .
     OPTIONAL { ?theme skos:prefLabel ?en . FILTER(LANG(?en) = "en") }
     OPTIONAL { ?theme skos:prefLabel ?fr . FILTER(LANG(?fr) = "fr") }
