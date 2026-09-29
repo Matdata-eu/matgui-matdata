@@ -1,0 +1,15 @@
+#+ name: DBpedia ontology: subclasses of Place
+#+ description: Explores the DBpedia ontology: all (transitive) subclasses of dbo:Place with their direct superclass.
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+
+SELECT ?class ?label ?superClass WHERE {
+  ?class rdfs:subClassOf+ dbo:Place ;
+         rdfs:subClassOf ?superClass ;
+         rdfs:label ?label .
+  FILTER(LANG(?label) = "en")
+  FILTER(STRSTARTS(STR(?superClass), STR(dbo:)))
+}
+ORDER BY ?superClass ?label

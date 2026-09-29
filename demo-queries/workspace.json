@@ -1,0 +1,47 @@
+{
+  "workspaceIri": "https://matgui.matdata.eu/demo/workspace",
+  "label": "MatGUI demo queries",
+  "description": "Ready-to-run example queries for public SPARQL endpoints, maintained at https://github.com/Matdata-eu/matgui-matdata/tree/main/demo-queries",
+  "sourceBaseUrl": "https://github.com/Matdata-eu/matgui-matdata/blob/main",
+  "endpoints": {
+    "demo": "https://jena.matdata.eu/matgui-demo/sparql",
+    "era": "https://graph.data.era.europa.eu/repositories/rinf-plus",
+    "op": "https://publications.europa.eu/webapi/rdf/sparql",
+    "data-europa": "https://data.europa.eu/sparql",
+    "wikidata": "https://query.wikidata.org/sparql",
+    "dbpedia": "https://dbpedia.org/sparql",
+    "osm": "https://qlever.cs.uni-freiburg.de/api/osm-planet",
+    "uniprot": "https://sparql.uniprot.org/sparql",
+    "getty": "https://vocab.getty.edu/sparql",
+    "agrovoc": "https://agrovoc.fao.org/sparql",
+    "lov": "https://lov.linkeddata.es/dataset/lov/sparql"
+  },
+  "folders": {
+    "getting-started": { "label": "Getting started", "endpoint": "demo" },
+
+    "era-rinf": { "label": "ERA - Railway infrastructure (RINF)", "endpoint": "era" },
+    "era-rinf/explore": { "label": "Explore the knowledge graph" },
+    "era-rinf/operational-points": { "label": "Operational points" },
+    "era-rinf/lines-and-tracks": { "label": "Sections of line and tracks" },
+    "era-rinf/maps": { "label": "Maps" },
+
+    "publications-office": { "label": "EU Publications Office", "endpoint": "op" },
+    "publications-office/authority-tables": { "label": "Authority tables (SKOS)" },
+    "publications-office/eurovoc": { "label": "EuroVoc thesaurus" },
+    "publications-office/eu-law": { "label": "EU law (Cellar)" },
+
+    "data-europa-eu": { "label": "data.europa.eu", "endpoint": "data-europa" },
+    "data-europa-eu/datasets": { "label": "Datasets and catalogues" },
+    "data-europa-eu/authority-tables": { "label": "Authority tables (SKOS)" },
+
+    "geosparql": { "label": "GeoSPARQL (Apache Jena)", "endpoint": "demo" },
+
+    "wikidata": { "label": "Wikidata", "endpoint": "wikidata" },
+    "dbpedia": { "label": "DBpedia", "endpoint": "dbpedia" },
+    "openstreetmap": { "label": "OpenStreetMap (QLever)", "endpoint": "osm" },
+    "life-sciences": { "label": "Life sciences (UniProt)", "endpoint": "uniprot" },
+    "cultural-heritage": { "label": "Cultural heritage (Getty vocabularies)", "endpoint": "getty" },
+    "agriculture": { "label": "Agriculture (AGROVOC)", "endpoint": "agrovoc" },
+    "vocabularies": { "label": "Linked Open Vocabularies", "endpoint": "lov" }
+  }
+}

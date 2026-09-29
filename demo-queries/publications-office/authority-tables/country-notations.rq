@@ -1,0 +1,13 @@
+#+ name: Country codes (ISO, EU, ...)
+#+ description: Each country concept carries several notations, typed by the code list they come from (ISO 3166 alpha-2/alpha-3, numeric, ...).
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?country ?label ?notation ?codeList WHERE {
+  ?country skos:inScheme <http://publications.europa.eu/resource/authority/country> ;
+           skos:prefLabel ?label ;
+           skos:notation ?notation .
+  FILTER(LANG(?label) = "en")
+  BIND(DATATYPE(?notation) AS ?codeList)
+}
+ORDER BY ?label ?codeList
+LIMIT 500

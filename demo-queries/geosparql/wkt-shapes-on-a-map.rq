@@ -1,0 +1,14 @@
+#+ name: WKT shapes on a map
+#+ description: Returns points, lines and polygons as geo:wktLiteral so the Geo plugin can draw them.
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?label ?kind ?wkt WHERE {
+  VALUES (?label ?kind ?wkt) {
+    ("Brussels-Central station" "point"
+      "POINT(4.3571 50.8455)"^^geo:wktLiteral)
+    ("Brussels North-South rail link" "line"
+      "LINESTRING(4.3606 50.8603, 4.3571 50.8455, 4.3360 50.8358)"^^geo:wktLiteral)
+    ("Brussels pentagon (approx.)" "polygon"
+      "POLYGON((4.3434 50.8540, 4.3700 50.8560, 4.3780 50.8420, 4.3560 50.8340, 4.3400 50.8430, 4.3434 50.8540))"^^geo:wktLiteral)
+  }
+}

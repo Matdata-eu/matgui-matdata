@@ -1,0 +1,13 @@
+#+ name: Operational point types
+#+ description: Distribution of operational point types across Europe, using the labels of the SKOS type concepts.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?type ?typeLabel (COUNT(DISTINCT ?op) AS ?operationalPoints) WHERE {
+  ?op a era:OperationalPoint ;
+      era:opType ?type .
+  OPTIONAL { ?type skos:prefLabel ?typeLabel . FILTER(LANGMATCHES(LANG(?typeLabel), "en")) }
+}
+GROUP BY ?type ?typeLabel
+ORDER BY DESC(?operationalPoints)

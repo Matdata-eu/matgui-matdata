@@ -1,0 +1,19 @@
+#+ name: Acts amending an act
+#+ description: Which legal acts amend Directive (EU) 2016/797 on railway interoperability (CELEX 32016L0797)?
+PREFIX cdm:  <http://publications.europa.eu/ontology/cdm#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX lang: <http://publications.europa.eu/resource/authority/language/>
+PREFIX rt:   <http://publications.europa.eu/resource/authority/resource-type/>
+
+SELECT ?amendingCelex ?date ?title WHERE {
+  ?target cdm:resource_legal_id_celex "32016L0797"^^xsd:string .
+  ?amending cdm:resource_legal_amends_resource_legal ?target ;
+            cdm:resource_legal_id_celex ?amendingCelex .
+  OPTIONAL { ?amending cdm:work_date_document ?date }
+  OPTIONAL {
+    ?expression cdm:expression_belongs_to_work ?amending ;
+                cdm:expression_uses_language lang:ENG ;
+                cdm:expression_title ?title .
+  }
+}
+ORDER BY ?date

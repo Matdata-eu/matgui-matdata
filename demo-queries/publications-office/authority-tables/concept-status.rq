@@ -1,0 +1,13 @@
+#+ name: Concept status in the country table
+#+ description: Authority table concepts carry lifecycle metadata. Counts the country concepts per status and shows start and end of use.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#>
+PREFIX at-ont: <http://publications.europa.eu/ontology/authority/>
+
+SELECT ?status (COUNT(?concept) AS ?concepts) (MIN(?start) AS ?earliestStart) (MAX(?end) AS ?latestEnd) WHERE {
+  ?concept skos:inScheme <http://publications.europa.eu/resource/authority/country> .
+  OPTIONAL { ?concept euvoc:status ?status }
+  OPTIONAL { ?concept at-ont:start.use ?start }
+  OPTIONAL { ?concept at-ont:end.use ?end }
+}
+GROUP BY ?status

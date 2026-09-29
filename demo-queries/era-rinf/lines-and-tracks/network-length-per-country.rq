@@ -1,0 +1,13 @@
+#+ name: Network length per country
+#+ description: Sums era:lengthOfSectionOfLine per country to estimate the size of each national network.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?country (COUNT(?sol) AS ?sectionsOfLine) (ROUND(SUM(?length)) AS ?totalLength) WHERE {
+  ?sol a era:SectionOfLine ;
+       era:inCountry ?country ;
+       era:lengthOfSectionOfLine ?length .
+}
+GROUP BY ?country
+ORDER BY DESC(?totalLength)

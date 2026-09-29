@@ -1,0 +1,15 @@
+#+ name: Datasets by keyword
+#+ description: Datasets tagged with a keyword (exact match, several spellings). Replace the VALUES to search for something else.
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT DISTINCT ?dataset ?title ?publisherName WHERE {
+  VALUES ?keyword { "railway"@en "railway" "rail transport"@en "railways"@en }
+  ?dataset a dcat:Dataset ;
+           dcat:keyword ?keyword ;
+           dct:title ?title .
+  FILTER(LANGMATCHES(LANG(?title), "en") || LANG(?title) = "")
+  OPTIONAL { ?dataset dct:publisher/foaf:name ?publisherName }
+}
+LIMIT 200

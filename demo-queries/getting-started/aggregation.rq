@@ -1,0 +1,23 @@
+#+ name: Aggregation with GROUP BY
+#+ description: COUNT, SUM, AVG, MIN, MAX and GROUP_CONCAT over an inline table, with HAVING.
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?country
+       (COUNT(?city) AS ?cities)
+       (SUM(?population) AS ?totalPopulation)
+       (ROUND(AVG(?population)) AS ?avgPopulation)
+       (MAX(?population) AS ?largest)
+       (GROUP_CONCAT(?city; separator=", ") AS ?cityList)
+WHERE {
+  VALUES (?country ?city ?population) {
+    ("Belgium"     "Brussels"  1222637)
+    ("Belgium"     "Antwerp"    536079)
+    ("Belgium"     "Ghent"      265086)
+    ("Netherlands" "Amsterdam"  931298)
+    ("Netherlands" "Rotterdam"  664311)
+    ("Luxembourg"  "Luxembourg" 134714)
+  }
+}
+GROUP BY ?country
+HAVING (COUNT(?city) > 1)
+ORDER BY DESC(?totalPopulation)

@@ -1,0 +1,12 @@
+#+ name: List all authority tables
+#+ description: The EU Vocabularies authority tables (countries, languages, corporate bodies, file types, ...) are SKOS concept schemes. Lists all of them with their size.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?scheme ?label (COUNT(?concept) AS ?concepts) WHERE {
+  ?scheme a skos:ConceptScheme .
+  FILTER(STRSTARTS(STR(?scheme), "http://publications.europa.eu/resource/authority/"))
+  OPTIONAL { ?scheme skos:prefLabel ?label . FILTER(LANG(?label) = "en") }
+  OPTIONAL { ?concept skos:inScheme ?scheme }
+}
+GROUP BY ?scheme ?label
+ORDER BY ?scheme

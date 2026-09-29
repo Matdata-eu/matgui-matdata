@@ -1,0 +1,16 @@
+#+ name: EV charging stations per operator in Belgium
+#+ description: Counts amenity=charging_station features in Belgium (relation 52411) per operator.
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+PREFIX osmrel: <https://www.openstreetmap.org/relation/>
+PREFIX ogc:    <http://www.opengis.net/rdf#>
+PREFIX geo:    <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?operator (COUNT(?station) AS ?stations) WHERE {
+  osmrel:52411 ogc:sfContains ?station .
+  ?station osmkey:amenity "charging_station" .
+  OPTIONAL { ?station osmkey:operator ?op }
+  BIND(COALESCE(?op, "(unknown)") AS ?operator)
+}
+GROUP BY ?operator
+ORDER BY DESC(?stations)
+LIMIT 25

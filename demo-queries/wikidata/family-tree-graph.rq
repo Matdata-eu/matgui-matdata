@@ -1,0 +1,22 @@
+#+ name: Family tree of the Belgian royal family (graph)
+#+ description: CONSTRUCTs parent/child relations starting from King Leopold I. Open in the Graph plugin to see the family tree.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ex:   <https://example.org/family#>
+
+CONSTRUCT {
+  ?person ex:childOf ?parent ;
+          rdfs:label ?personLabel .
+  ?parent rdfs:label ?parentLabel .
+}
+WHERE {
+  # wd:Q12971 = Leopold I of Belgium; P40 = child
+  wd:Q12971 wdt:P40* ?parent .
+  ?parent wdt:P40 ?person .
+  ?person rdfs:label ?personLabel . FILTER(LANG(?personLabel) = "en")
+  ?parent rdfs:label ?parentLabel . FILTER(LANG(?parentLabel) = "en")
+}
+LIMIT 1000

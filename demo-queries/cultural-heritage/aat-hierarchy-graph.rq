@@ -1,0 +1,20 @@
+#+ name: AAT hierarchy below 'bridges' (graph)
+#+ description: CONSTRUCTs the narrower hierarchy of the AAT concept 'bridges (built works)' (aat:300007836). Use the Graph plugin.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX gvp:  <http://vocab.getty.edu/ontology#>
+PREFIX xl:   <http://www.w3.org/2008/05/skos-xl#>
+PREFIX aat:  <http://vocab.getty.edu/aat/>
+PREFIX tgn:  <http://vocab.getty.edu/tgn/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+  ?concept skos:broader ?parent ;
+           rdfs:label ?term .
+  aat:300007836 rdfs:label ?topTerm .
+}
+WHERE {
+  aat:300007836 gvp:prefLabelGVP/xl:literalForm ?topTerm .
+  ?concept gvp:broaderPreferred+ aat:300007836 ;
+           gvp:broaderPreferred ?parent ;
+           gvp:prefLabelGVP/xl:literalForm ?term .
+}

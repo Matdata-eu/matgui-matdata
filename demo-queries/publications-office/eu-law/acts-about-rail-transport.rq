@@ -1,0 +1,23 @@
+#+ name: Recent acts about rail transport
+#+ description: Legal acts tagged with the EuroVoc concept 'rail transport', most recent first.
+PREFIX cdm:  <http://publications.europa.eu/ontology/cdm#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX lang: <http://publications.europa.eu/resource/authority/language/>
+PREFIX rt:   <http://publications.europa.eu/resource/authority/resource-type/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?celex ?date ?title WHERE {
+  ?concept skos:inScheme <http://eurovoc.europa.eu/100141> ;
+           skos:prefLabel "rail transport"@en .
+  ?work cdm:work_is_about_concept_eurovoc ?concept ;
+        cdm:resource_legal_id_celex ?celex ;
+        cdm:work_date_document ?date .
+  FILTER(?date >= "2020-01-01"^^xsd:date)
+  OPTIONAL {
+    ?expression cdm:expression_belongs_to_work ?work ;
+                cdm:expression_uses_language lang:ENG ;
+                cdm:expression_title ?title .
+  }
+}
+ORDER BY DESC(?date)
+LIMIT 100

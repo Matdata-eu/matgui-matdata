@@ -1,0 +1,13 @@
+#+ name: Narrower concepts of 'cereals'
+#+ description: Walks down the SKOS hierarchy from 'cereals' (c_1474) and returns the English labels.
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+
+SELECT ?concept ?label ?parentLabel WHERE {
+  ?concept skos:broader+ <http://aims.fao.org/aos/agrovoc/c_1474> ;
+           skos:broader ?parent ;
+           skosxl:prefLabel/skosxl:literalForm ?label .
+  ?parent skosxl:prefLabel/skosxl:literalForm ?parentLabel .
+  FILTER(LANG(?label) = "en" && LANG(?parentLabel) = "en")
+}
+ORDER BY ?parentLabel ?label

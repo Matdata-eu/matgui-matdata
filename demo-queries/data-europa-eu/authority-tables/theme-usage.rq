@@ -1,0 +1,12 @@
+#+ name: Datasets per data theme
+#+ description: Joins the data-theme code list with the catalogue: how many datasets use each theme?
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+
+SELECT ?theme ?label (COUNT(?dataset) AS ?datasets) WHERE {
+  ?theme skos:inScheme <http://publications.europa.eu/resource/authority/data-theme> .
+  OPTIONAL { ?theme skos:prefLabel ?label . FILTER(LANG(?label) = "en") }
+  ?dataset dcat:theme ?theme .
+}
+GROUP BY ?theme ?label
+ORDER BY DESC(?datasets)

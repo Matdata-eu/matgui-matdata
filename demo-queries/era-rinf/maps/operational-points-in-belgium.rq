@@ -1,0 +1,14 @@
+#+ name: Map: operational points in Belgium
+#+ description: Operational points with their WKT geometry, ready for the Geo plugin.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX country: <http://publications.europa.eu/resource/authority/country/>
+
+SELECT ?op ?name ?wkt WHERE {
+  ?op a era:OperationalPoint ;
+      era:inCountry country:BEL ;
+      era:opName ?name ;
+      geo:hasGeometry/geo:asWKT ?wkt .
+}

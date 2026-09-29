@@ -1,0 +1,15 @@
+#+ name: EU agencies and their seats
+#+ description: Agencies of the European Union with their seat and founding date.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?agency ?agencyLabel ?seatLabel ?founded WHERE {
+  ?agency wdt:P31/wdt:P279* wd:Q1377535 .
+  OPTIONAL { ?agency wdt:P159 ?seat }
+  OPTIONAL { ?agency wdt:P571 ?founded }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }
+}
+ORDER BY ?agencyLabel

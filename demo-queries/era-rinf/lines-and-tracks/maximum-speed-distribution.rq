@@ -1,0 +1,12 @@
+#+ name: Maximum permitted speed distribution
+#+ description: How many tracks allow each maximum permitted speed (km/h)?
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?maxSpeed (COUNT(?track) AS ?tracks) WHERE {
+  ?track a era:Track ;
+         era:maximumPermittedSpeed ?maxSpeed .
+}
+GROUP BY ?maxSpeed
+ORDER BY DESC(?maxSpeed)

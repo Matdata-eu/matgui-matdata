@@ -1,0 +1,23 @@
+#+ name: Programming language influences (graph)
+#+ description: CONSTRUCTs the 'influenced by' network between programming languages. Visualise it with the Graph plugin.
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+  ?language dbo:influencedBy ?influence .
+  ?language rdfs:label ?label .
+  ?influence rdfs:label ?influenceLabel .
+}
+WHERE {
+  VALUES ?language {
+    <http://dbpedia.org/resource/Python_(programming_language)>
+    <http://dbpedia.org/resource/Java_(programming_language)>
+    <http://dbpedia.org/resource/Rust_(programming_language)>
+    <http://dbpedia.org/resource/Kotlin_(programming_language)>
+    dbr:JavaScript
+  }
+  ?language dbo:influencedBy ?influence .
+  ?language rdfs:label ?label . FILTER(LANG(?label) = "en")
+  ?influence rdfs:label ?influenceLabel . FILTER(LANG(?influenceLabel) = "en")
+}

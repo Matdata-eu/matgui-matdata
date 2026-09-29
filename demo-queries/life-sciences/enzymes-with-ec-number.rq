@@ -1,0 +1,15 @@
+#+ name: Human enzymes with an EC number
+#+ description: Reviewed human proteins annotated with an Enzyme Commission (EC) number.
+PREFIX up:    <http://purl.uniprot.org/core/>
+PREFIX taxon: <http://purl.uniprot.org/taxonomy/>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?protein ?name ?ec WHERE {
+  ?protein a up:Protein ;
+           up:reviewed true ;
+           up:organism taxon:9606 ;
+           up:recommendedName ?recName .
+  ?recName up:fullName ?name ;
+           up:ecName ?ec .
+}
+LIMIT 200

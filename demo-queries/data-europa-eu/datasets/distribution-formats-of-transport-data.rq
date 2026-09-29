@@ -1,0 +1,15 @@
+#+ name: Distribution formats of transport data
+#+ description: Which file formats are used by the distributions of transport datasets?
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX theme: <http://publications.europa.eu/resource/authority/data-theme/>
+
+SELECT ?format (COUNT(DISTINCT ?distribution) AS ?distributions) WHERE {
+  ?dataset dcat:theme theme:TRAN ;
+           dcat:distribution ?distribution .
+  ?distribution dct:format ?format .
+}
+GROUP BY ?format
+ORDER BY DESC(?distributions)
+LIMIT 25

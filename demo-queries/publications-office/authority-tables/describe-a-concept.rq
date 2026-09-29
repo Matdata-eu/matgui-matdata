@@ -1,0 +1,3 @@
+#+ name: Describe a concept
+#+ description: DESCRIBE returns everything the endpoint knows about the corporate body 'European Union Agency for Railways'. Try the Graph plugin on the result.
+DESCRIBE <http://publications.europa.eu/resource/authority/corporate-body/ERA>

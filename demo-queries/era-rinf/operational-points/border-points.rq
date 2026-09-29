@@ -1,0 +1,15 @@
+#+ name: Border points
+#+ description: Operational points whose type label mentions a border, grouped by country.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?country ?op ?name ?typeLabel WHERE {
+  ?op a era:OperationalPoint ;
+      era:opName ?name ;
+      era:opType ?type .
+  ?type skos:prefLabel ?typeLabel .
+  FILTER(CONTAINS(LCASE(STR(?typeLabel)), "border"))
+  OPTIONAL { ?op era:inCountry ?country }
+}
+ORDER BY ?country ?name

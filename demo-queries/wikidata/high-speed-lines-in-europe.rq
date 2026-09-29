@@ -1,0 +1,17 @@
+#+ name: High-speed railway lines in Europe
+#+ description: High-speed railway lines with their country, length and design speed.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?line ?lineLabel ?countryLabel ?length ?speed WHERE {
+  ?line wdt:P31/wdt:P279* wd:Q1323906 ;
+        wdt:P17 ?country .
+  ?country wdt:P30 wd:Q46 .
+  OPTIONAL { ?line wdt:P2043 ?length }
+  OPTIONAL { ?line wdt:P3978 ?speed }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }
+}
+ORDER BY ?countryLabel ?lineLabel

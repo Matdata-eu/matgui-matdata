@@ -1,0 +1,17 @@
+#+ name: List all demo queries
+#+ description: Meta query: the demo workspace is itself stored as RDF in this Jena dataset. Lists every demo query, its folder and its endpoint.
+PREFIX yasgui:  <https://matdata.eu/ns/yasgui#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX sd:      <http://www.w3.org/ns/sparql-service-description#>
+
+SELECT ?folder ?query ?endpoint WHERE {
+  ?mq a yasgui:ManagedQuery ;
+      rdfs:label ?query ;
+      dcterms:isPartOf ?container .
+  OPTIONAL { ?container rdfs:label ?folder }
+  ?version dcterms:isVersionOf ?mq ;
+           prov:used/sd:endpoint ?endpoint .
+}
+ORDER BY ?folder ?query

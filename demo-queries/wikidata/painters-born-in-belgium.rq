@@ -1,0 +1,20 @@
+#+ name: Painters born in Belgium
+#+ description: Painters born in Belgium with birth and death year and an image when available.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?painter ?painterLabel ?born ?died ?image WHERE {
+  ?painter wdt:P106 wd:Q1028181 ;
+           wdt:P19/wdt:P17 wd:Q31 ;
+           wdt:P569 ?birth .
+  OPTIONAL { ?painter wdt:P570 ?death }
+  OPTIONAL { ?painter wdt:P18 ?image }
+  BIND(YEAR(?birth) AS ?born)
+  BIND(YEAR(?death) AS ?died)
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }
+}
+ORDER BY ?born
+LIMIT 200

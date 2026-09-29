@@ -1,0 +1,10 @@
+#+ name: Update frequencies
+#+ description: The frequency authority table used for dct:accrualPeriodicity.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?frequency ?label WHERE {
+  ?frequency skos:inScheme <http://publications.europa.eu/resource/authority/frequency> ;
+             skos:prefLabel ?label .
+  FILTER(LANG(?label) = "en")
+}
+ORDER BY ?label

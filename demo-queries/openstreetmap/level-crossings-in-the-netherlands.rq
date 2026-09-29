@@ -1,0 +1,15 @@
+#+ name: Level crossings in the Netherlands
+#+ description: Counts railway level crossings per crossing type in the Netherlands (relation 47796).
+PREFIX osmkey: <https://www.openstreetmap.org/wiki/Key:>
+PREFIX osmrel: <https://www.openstreetmap.org/relation/>
+PREFIX ogc:    <http://www.opengis.net/rdf#>
+PREFIX geo:    <http://www.opengis.net/ont/geosparql#>
+
+SELECT ?crossingType (COUNT(?node) AS ?crossings) WHERE {
+  osmrel:47796 ogc:sfContains ?node .
+  ?node osmkey:railway "level_crossing" .
+  OPTIONAL { ?node osmkey:crossing:barrier ?barrier }
+  BIND(COALESCE(?barrier, "(not tagged)") AS ?crossingType)
+}
+GROUP BY ?crossingType
+ORDER BY DESC(?crossings)

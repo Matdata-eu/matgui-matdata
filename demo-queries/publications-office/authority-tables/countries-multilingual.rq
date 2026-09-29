@@ -1,0 +1,14 @@
+#+ name: Countries in four languages
+#+ description: The country authority table with its code and the English, French, German and Dutch labels.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+
+SELECT ?country ?code ?en ?fr ?de ?nl WHERE {
+  ?country skos:inScheme <http://publications.europa.eu/resource/authority/country> ;
+           dc:identifier ?code .
+  OPTIONAL { ?country skos:prefLabel ?en . FILTER(LANG(?en) = "en") }
+  OPTIONAL { ?country skos:prefLabel ?fr . FILTER(LANG(?fr) = "fr") }
+  OPTIONAL { ?country skos:prefLabel ?de . FILTER(LANG(?de) = "de") }
+  OPTIONAL { ?country skos:prefLabel ?nl . FILTER(LANG(?nl) = "nl") }
+}
+ORDER BY ?code

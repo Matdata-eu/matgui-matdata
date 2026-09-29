@@ -1,0 +1,14 @@
+#+ name: Vocabularies and their prefixes
+#+ description: All vocabularies registered in Linked Open Vocabularies with their preferred prefix and namespace.
+PREFIX voaf: <http://purl.org/vocommons/voaf#>
+PREFIX vann: <http://purl.org/vocab/vann/>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+
+SELECT ?vocabulary ?prefix ?namespace ?title WHERE {
+  ?vocabulary a voaf:Vocabulary ;
+              vann:preferredNamespacePrefix ?prefix ;
+              vann:preferredNamespaceUri ?namespace .
+  OPTIONAL { ?vocabulary dct:title ?title . FILTER(LANG(?title) = "en") }
+}
+ORDER BY ?prefix

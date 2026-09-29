@@ -1,0 +1,14 @@
+#+ name: ERA ontology classes
+#+ description: Lists the classes of the ERA vocabulary (http://data.europa.eu/949/) with their English label and definition.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+
+SELECT ?class ?label ?definition WHERE {
+  ?class a owl:Class .
+  FILTER(STRSTARTS(STR(?class), STR(era:)))
+  OPTIONAL { ?class rdfs:label ?label . FILTER(LANGMATCHES(LANG(?label), "en") || LANG(?label) = "") }
+  OPTIONAL { ?class skos:definition ?definition . FILTER(LANGMATCHES(LANG(?definition), "en") || LANG(?definition) = "") }
+}
+ORDER BY ?class

@@ -1,0 +1,11 @@
+#+ name: EuroVoc domains
+#+ description: The 21 top-level domains of the EuroVoc thesaurus.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX eurovoc: <http://eurovoc.europa.eu/schema#>
+
+SELECT ?domain ?label WHERE {
+  ?domain a eurovoc:Domain ;
+          skos:prefLabel ?label .
+  FILTER(LANG(?label) = "en")
+}
+ORDER BY ?label

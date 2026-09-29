@@ -1,0 +1,14 @@
+#+ name: ETCS levels
+#+ description: Counts tracks per European Train Control System (ETCS) level.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?level ?levelLabel (COUNT(DISTINCT ?track) AS ?tracks) WHERE {
+  ?track a era:Track ;
+         era:etcsLevel ?etcs .
+  ?etcs era:etcsLevelType ?level .
+  OPTIONAL { ?level skos:prefLabel ?levelLabel . FILTER(LANGMATCHES(LANG(?levelLabel), "en")) }
+}
+GROUP BY ?level ?levelLabel
+ORDER BY DESC(?tracks)

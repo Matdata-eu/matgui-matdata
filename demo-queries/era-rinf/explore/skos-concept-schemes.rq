@@ -1,0 +1,12 @@
+#+ name: SKOS concept schemes
+#+ description: The ERA knowledge graph uses SKOS code lists (operational point types, energy supply systems, ...). Lists every concept scheme and its size.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?scheme ?schemeLabel (COUNT(?concept) AS ?concepts) WHERE {
+  ?concept skos:inScheme ?scheme .
+  OPTIONAL { ?scheme skos:prefLabel|rdfs:label ?schemeLabel }
+}
+GROUP BY ?scheme ?schemeLabel
+ORDER BY ?scheme

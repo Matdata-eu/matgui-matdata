@@ -1,0 +1,11 @@
+#+ name: Hello world
+#+ description: The smallest useful SELECT: inline data with VALUES, no dataset needed.
+# VALUES lets you put a small table of data directly in the query.
+SELECT ?greeting ?language WHERE {
+  VALUES (?greeting ?language) {
+    ("Hello world"  "English")
+    ("Hallo wereld" "Dutch")
+    ("Bonjour le monde" "French")
+    ("Hallo Welt"   "German")
+  }
+}

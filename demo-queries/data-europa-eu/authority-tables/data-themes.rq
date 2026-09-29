@@ -1,0 +1,11 @@
+#+ name: Data themes
+#+ description: The DCAT-AP data themes (authority table data-theme) in English, French and German.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?theme ?en ?fr ?de WHERE {
+  ?theme skos:inScheme <http://publications.europa.eu/resource/authority/data-theme> .
+  OPTIONAL { ?theme skos:prefLabel ?en . FILTER(LANG(?en) = "en") }
+  OPTIONAL { ?theme skos:prefLabel ?fr . FILTER(LANG(?fr) = "fr") }
+  OPTIONAL { ?theme skos:prefLabel ?de . FILTER(LANG(?de) = "de") }
+}
+ORDER BY ?theme

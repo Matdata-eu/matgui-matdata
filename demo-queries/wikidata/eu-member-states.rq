@@ -1,0 +1,21 @@
+#+ name: EU member states
+#+ description: Current member states of the European Union with capital, population and accession date.
+PREFIX wd:       <http://www.wikidata.org/entity/>
+PREFIX wdt:      <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX bd:       <http://www.bigdata.com/rdf#>
+PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX p:        <http://www.wikidata.org/prop/>
+PREFIX ps:       <http://www.wikidata.org/prop/statement/>
+PREFIX pq:       <http://www.wikidata.org/prop/qualifier/>
+
+SELECT ?country ?countryLabel ?capitalLabel ?population ?joined WHERE {
+  ?country p:P463 ?membership .
+  ?membership ps:P463 wd:Q458 .
+  OPTIONAL { ?membership pq:P580 ?joined }
+  FILTER NOT EXISTS { ?membership pq:P582 ?left }
+  OPTIONAL { ?country wdt:P36 ?capital }
+  OPTIONAL { ?country wdt:P1082 ?population }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }
+}
+ORDER BY ?joined ?countryLabel

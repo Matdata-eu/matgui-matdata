@@ -1,0 +1,21 @@
+#+ name: Network graph of Luxembourg
+#+ description: CONSTRUCT that turns sections of line into direct links between operational points. Open the result in the Graph plugin.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX country: <http://publications.europa.eu/resource/authority/country/>
+PREFIX ex:   <https://example.org/rinf#>
+
+CONSTRUCT {
+  ?start ex:connectedTo ?end ;
+         rdfs:label ?startName .
+  ?end   rdfs:label ?endName .
+}
+WHERE {
+  ?sol a era:SectionOfLine ;
+       era:inCountry country:LUX ;
+       era:opStart ?start ;
+       era:opEnd ?end .
+  ?start era:opName ?startName .
+  ?end   era:opName ?endName .
+}

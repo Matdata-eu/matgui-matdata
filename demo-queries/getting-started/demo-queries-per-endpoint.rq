@@ -1,0 +1,14 @@
+#+ name: Demo queries per endpoint
+#+ description: Meta query: counts the demo queries per SPARQL endpoint they are associated with.
+PREFIX yasgui:  <https://matdata.eu/ns/yasgui#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX prov:    <http://www.w3.org/ns/prov#>
+PREFIX sd:      <http://www.w3.org/ns/sparql-service-description#>
+
+SELECT ?endpoint (COUNT(DISTINCT ?mq) AS ?queries) WHERE {
+  ?mq a yasgui:ManagedQuery .
+  ?version dcterms:isVersionOf ?mq ;
+           prov:used/sd:endpoint ?endpoint .
+}
+GROUP BY ?endpoint
+ORDER BY DESC(?queries)

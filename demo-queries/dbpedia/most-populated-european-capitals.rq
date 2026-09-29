@@ -1,0 +1,15 @@
+#+ name: Most populated European capitals
+#+ description: Capital cities of European countries with their population.
+PREFIX dbo:  <http://dbpedia.org/ontology/>
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX dbc:  <http://dbpedia.org/resource/Category:>
+
+SELECT DISTINCT ?country ?capital ?population WHERE {
+  ?country dct:subject dbc:Countries_in_Europe ;
+           dbo:capital ?capital .
+  ?capital dbo:populationTotal ?population .
+}
+ORDER BY DESC(?population)
+LIMIT 50

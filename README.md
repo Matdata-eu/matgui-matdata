@@ -95,6 +95,31 @@ Modify `src/main.css` to customize the appearance of the interface.
 
 The MatGUI instance can be configured in `src/main.js`. See the [MatGUI documentation](https://matgui-doc.matdata.eu) for available options.
 
+## Demo Queries
+
+The site ships with a read-only **"MatGUI demo queries"** workspace: over 100 ready-to-run queries for ERA RINF, the EU Publications Office (authority tables, EuroVoc, Cellar), data.europa.eu, GeoSPARQL on Apache Jena, Wikidata, DBpedia, OpenStreetMap (QLever), UniProt, Getty, AGROVOC and LOV. Open them with the **Demo queries** link in the footer or from the query browser.
+
+The queries are plain `.rq` files in [`demo-queries/`](demo-queries). Each sub-directory is a workspace folder; folder labels, default endpoints and endpoint aliases are defined in [`demo-queries/workspace.json`](demo-queries/workspace.json). Every file starts with a small header:
+
+```sparql
+#+ name: Operational points per country
+#+ description: Counts operational points per member state.
+#+ endpoint: era        # optional when the folder has a default; alias or full URL
+PREFIX era: <http://data.europa.eu/949/>
+SELECT ...
+```
+
+[`scripts/demo_queries.py`](scripts/demo_queries.py) converts the files into the RDF model of MatGUI's SPARQL workspaces (`yasgui:Workspace`, `yasgui:WorkspaceFolder`, `yasgui:ManagedQuery`, `yasgui:ManagedQueryVersion`):
+
+```bash
+pip install rdflib
+python scripts/demo_queries.py validate     # syntax + metadata checks
+python scripts/demo_queries.py build        # writes build/matgui-demo.ttl
+python scripts/demo_queries.py smoke-test   # runs every query against its endpoint
+```
+
+The [Demo queries workflow](.github/workflows/demo-queries.yml) validates and smoke-tests the queries on every change, and on `main` (plus nightly) replaces the default graph of the `matgui-demo` dataset on [jena.matdata.eu](https://jena.matdata.eu) using the Graph Store Protocol. It needs the `JENA_USERNAME` and `JENA_PASSWORD` repository secrets; the dataset URL can be overridden with the `JENA_DATASET_URL` repository variable.
+
 ## Credits
 
 - Original YASGUI by [Zazuko](https://github.com/zazuko/yasgui) and [TriplyDB](https://github.com/triplydb/Yasgui)

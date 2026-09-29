@@ -1,0 +1,19 @@
+#+ name: Concept hierarchy (graph)
+#+ description: CONSTRUCTs the narrower hierarchy below 'land transport'. Best viewed with the Graph plugin.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+CONSTRUCT {
+  ?concept skos:broader ?parent ;
+           skos:prefLabel ?label .
+  ?top skos:prefLabel ?topLabel .
+}
+WHERE {
+  ?top skos:inScheme <http://eurovoc.europa.eu/100141> ;
+       skos:prefLabel "land transport"@en ;
+       skos:prefLabel ?topLabel .
+  FILTER(LANG(?topLabel) = "en")
+  ?concept skos:broader+ ?top ;
+           skos:broader ?parent ;
+           skos:prefLabel ?label .
+  FILTER(LANG(?label) = "en")
+}

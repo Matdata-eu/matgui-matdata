@@ -1,0 +1,16 @@
+#+ name: Search the Art & Architecture Thesaurus
+#+ description: AAT concepts whose preferred English term contains 'bridge', with their parent.
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX gvp:  <http://vocab.getty.edu/ontology#>
+PREFIX xl:   <http://www.w3.org/2008/05/skos-xl#>
+PREFIX aat:  <http://vocab.getty.edu/aat/>
+PREFIX tgn:  <http://vocab.getty.edu/tgn/>
+
+SELECT ?concept ?term ?parentTerm WHERE {
+  ?concept skos:inScheme aat: ;
+           gvp:prefLabelGVP/xl:literalForm ?term .
+  FILTER(CONTAINS(LCASE(STR(?term)), "bridge"))
+  OPTIONAL { ?concept gvp:broaderPreferred/gvp:prefLabelGVP/xl:literalForm ?parentTerm }
+}
+ORDER BY ?term
+LIMIT 100
