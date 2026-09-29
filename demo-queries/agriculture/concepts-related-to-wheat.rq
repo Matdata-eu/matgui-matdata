@@ -1,0 +1,14 @@
+#+ name: Concepts related to 'wheat'
+#+ description: Looks up the AGROVOC concept with the English label 'wheat' (SKOS-XL) and lists its narrower and related concepts.
+PREFIX skos:   <http://www.w3.org/2004/02/skos/core#>
+PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
+
+SELECT ?relation ?concept ?label WHERE {
+  ?wheatLabel skosxl:literalForm "wheat"@en .
+  ?wheat skosxl:prefLabel ?wheatLabel .
+  VALUES (?property ?relation) { (skos:narrower "narrower") (skos:related "related") (skos:broader "broader") }
+  ?wheat ?property ?concept .
+  ?concept skosxl:prefLabel/skosxl:literalForm ?label .
+  FILTER(LANG(?label) = "en")
+}
+ORDER BY ?relation ?label
