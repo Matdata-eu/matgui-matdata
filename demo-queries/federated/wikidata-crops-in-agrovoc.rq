@@ -8,17 +8,20 @@ PREFIX skosxl: <http://www.w3.org/2008/05/skos-xl#>
 SELECT ?crop ?cropLabel ?agrovoc ?fr ?es WHERE {
   SERVICE <https://query.wikidata.org/sparql> {
     SELECT ?crop ?cropLabel ?agrovocId WHERE {
-      ?crop wdt:P279 wd:Q12117 ;
+      ?crop wdt:P279+ wd:Q12117 ;
             wdt:P2004 ?agrovocId ;
             rdfs:label ?cropLabel .
       FILTER(LANG(?cropLabel) = "en")
     }
     LIMIT 25
   }
-  BIND(IRI(CONCAT("http://aims.fao.org/aos/agrovoc/", ?agrovocId)) AS ?agrovoc)
+  # AGROVOC concept IRIs look like .../agrovoc/c_1474; Wikidata may store "c_1474" or just "1474"
+  BIND(IRI(CONCAT("http://aims.fao.org/aos/agrovoc/",
+                  IF(STRSTARTS(?agrovocId, "c_"), ?agrovocId, CONCAT("c_", ?agrovocId)))) AS ?agrovoc)
   SERVICE <https://agrovoc.fao.org/sparql> {
-    ?agrovoc skosxl:prefLabel/skosxl:literalForm ?fr, ?es .
-    FILTER(LANG(?fr) = "fr" && LANG(?es) = "es")
+    ?agrovoc skosxl:prefLabel ?frLabel, ?esLabel .
+    ?frLabel skosxl:literalForm ?fr . FILTER(LANG(?fr) = "fr")
+    ?esLabel skosxl:literalForm ?es . FILTER(LANG(?es) = "es")
   }
 }
 ORDER BY ?cropLabel
