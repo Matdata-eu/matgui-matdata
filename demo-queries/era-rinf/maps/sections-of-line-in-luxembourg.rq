@@ -1,7 +1,9 @@
 #+ name: Map: sections of line in Luxembourg
-#+ description: Sections of line in Luxembourg drawn as lines between their start and end operational points (built with CONCAT when no line geometry is available).
+#+ description: Sections of line in Luxembourg drawn as straight lines between their start and end operational points.
 PREFIX era:  <http://data.europa.eu/949/>
 PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX wgs:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 PREFIX country: <http://publications.europa.eu/resource/authority/country/>
 
 SELECT ?sol ?from ?to ?length ?wkt WHERE {
@@ -12,11 +14,31 @@ SELECT ?sol ?from ?to ?length ?wkt WHERE {
   OPTIONAL { ?sol era:lengthOfSectionOfLine ?length }
   ?start era:opName ?from .
   ?end   era:opName ?to .
-  { ?start ?p1 ?startWkt . } UNION { ?start ?p1 ?g1 . ?g1 ?q1 ?startWkt . }
-  FILTER(DATATYPE(?startWkt) = geo:wktLiteral)
-  { ?end ?p2 ?endWkt . } UNION { ?end ?p2 ?g2 . ?g2 ?q2 ?endWkt . }
-  FILTER(DATATYPE(?endWkt) = geo:wktLiteral)
-  BIND(REPLACE(STR(?startWkt), "^.*POINT\\s*\\(\\s*([-0-9.]+\\s+[-0-9.]+).*$", "$1", "i") AS ?a)
-  BIND(REPLACE(STR(?endWkt),   "^.*POINT\\s*\\(\\s*([-0-9.]+\\s+[-0-9.]+).*$", "$1", "i") AS ?b)
-  BIND(STRDT(CONCAT("LINESTRING(", ?a, ", ", ?b, ")"), geo:wktLiteral) AS ?wkt)
+  { SELECT ?start (SAMPLE(?a) AS ?startXY) WHERE {
+    {
+      # WKT (typed or plain string) on the resource or on a linked geometry node
+      { ?start ?aP ?aWkt . } UNION { ?start ?aP ?aG . ?aG ?aQ ?aWkt . }
+      FILTER(isLiteral(?aWkt) && REGEX(STR(?aWkt), "POINT\\s*\\(", "i"))
+      BIND(REPLACE(STR(?aWkt), "^.*POINT\\s*\\(\\s*([-0-9.eE]+)\\s+([-0-9.eE]+).*$", "$1 $2", "i") AS ?a)
+    } UNION {
+      # W3C WGS84 lat/long, directly or via a location node
+      { ?start wgs:lat ?aLat ; wgs:long ?aLong . }
+      UNION { ?start ?aP ?aG . ?aG wgs:lat ?aLat ; wgs:long ?aLong . }
+      BIND(CONCAT(STR(?aLong), " ", STR(?aLat)) AS ?a)
+    }
+  } GROUP BY ?start }
+  { SELECT ?end (SAMPLE(?b) AS ?endXY) WHERE {
+    {
+      # WKT (typed or plain string) on the resource or on a linked geometry node
+      { ?end ?bP ?bWkt . } UNION { ?end ?bP ?bG . ?bG ?bQ ?bWkt . }
+      FILTER(isLiteral(?bWkt) && REGEX(STR(?bWkt), "POINT\\s*\\(", "i"))
+      BIND(REPLACE(STR(?bWkt), "^.*POINT\\s*\\(\\s*([-0-9.eE]+)\\s+([-0-9.eE]+).*$", "$1 $2", "i") AS ?b)
+    } UNION {
+      # W3C WGS84 lat/long, directly or via a location node
+      { ?end wgs:lat ?bLat ; wgs:long ?bLong . }
+      UNION { ?end ?bP ?bG . ?bG wgs:lat ?bLat ; wgs:long ?bLong . }
+      BIND(CONCAT(STR(?bLong), " ", STR(?bLat)) AS ?b)
+    }
+  } GROUP BY ?end }
+  BIND(STRDT(CONCAT("LINESTRING(", ?startXY, ", ", ?endXY, ")"), geo:wktLiteral) AS ?wkt)
 }

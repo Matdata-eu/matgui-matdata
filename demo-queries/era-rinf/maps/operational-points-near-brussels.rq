@@ -1,7 +1,8 @@
 #+ name: Map: operational points around Brussels
-#+ description: Filters Belgian operational points on a bounding box by extracting longitude/latitude from the WKT string, so it works without a spatial index.
+#+ description: Filters Belgian operational points on a bounding box around Brussels using the numeric coordinates, so it works without a spatial index.
 PREFIX era:  <http://data.europa.eu/949/>
 PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX wgs:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 PREFIX country: <http://publications.europa.eu/resource/authority/country/>
 
@@ -9,11 +10,19 @@ SELECT ?op ?name ?wkt WHERE {
   ?op a era:OperationalPoint ;
       era:inCountry country:BEL ;
       era:opName ?name .
-  { ?op ?p ?wkt . } UNION { ?op ?p ?geometry . ?geometry ?q ?wkt . }
-  FILTER(DATATYPE(?wkt) = geo:wktLiteral)
-  BIND(REPLACE(STR(?wkt), "^.*POINT\\s*\\(\\s*([-0-9.]+)\\s+([-0-9.]+).*$", "$1", "i") AS ?lonStr)
-  BIND(REPLACE(STR(?wkt), "^.*POINT\\s*\\(\\s*([-0-9.]+)\\s+([-0-9.]+).*$", "$2", "i") AS ?latStr)
-  BIND(xsd:decimal(?lonStr) AS ?lon)
-  BIND(xsd:decimal(?latStr) AS ?lat)
+  {
+    # WKT (typed or plain string) on the resource or on a linked geometry node
+    { ?op ?xyP ?xyWkt . } UNION { ?op ?xyP ?xyG . ?xyG ?xyQ ?xyWkt . }
+    FILTER(isLiteral(?xyWkt) && REGEX(STR(?xyWkt), "POINT\\s*\\(", "i"))
+    BIND(REPLACE(STR(?xyWkt), "^.*POINT\\s*\\(\\s*([-0-9.eE]+)\\s+([-0-9.eE]+).*$", "$1 $2", "i") AS ?xy)
+  } UNION {
+    # W3C WGS84 lat/long, directly or via a location node
+    { ?op wgs:lat ?xyLat ; wgs:long ?xyLong . }
+    UNION { ?op ?xyP ?xyG . ?xyG wgs:lat ?xyLat ; wgs:long ?xyLong . }
+    BIND(CONCAT(STR(?xyLong), " ", STR(?xyLat)) AS ?xy)
+  }
+  BIND(xsd:decimal(STRBEFORE(?xy, " ")) AS ?lon)
+  BIND(xsd:decimal(STRAFTER(?xy, " "))  AS ?lat)
   FILTER(?lon > 4.20 && ?lon < 4.50 && ?lat > 50.76 && ?lat < 50.92)
+  BIND(STRDT(CONCAT("POINT(", ?xy, ")"), geo:wktLiteral) AS ?wkt)
 }

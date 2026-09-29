@@ -4,9 +4,13 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dc:   <http://purl.org/dc/elements/1.1/>
 
 SELECT DISTINCT ?concept ?code ?label WHERE {
-  ?concept skos:inScheme <http://publications.europa.eu/resource/authority/corporate-body> ;
-           skos:prefLabel ?label .
-  FILTER(LANG(?label) = "en")
-  OPTIONAL { ?concept dc:identifier ?code }
+  # Each authority table is stored in a named graph with the scheme's IRI;
+  # querying that graph directly is much faster than scanning all graphs.
+  GRAPH <http://publications.europa.eu/resource/authority/corporate-body> {
+    ?concept skos:inScheme <http://publications.europa.eu/resource/authority/corporate-body> ;
+             skos:prefLabel ?label .
+    FILTER(LANG(?label) = "en")
+    OPTIONAL { ?concept dc:identifier ?code }
+  }
 }
 ORDER BY ?code

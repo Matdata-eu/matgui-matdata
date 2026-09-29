@@ -3,11 +3,15 @@
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
 SELECT DISTINCT ?country ?label ?notation ?codeList WHERE {
-  ?country skos:inScheme <http://publications.europa.eu/resource/authority/country> ;
-           skos:prefLabel ?label ;
-           skos:notation ?notation .
-  FILTER(LANG(?label) = "en")
-  BIND(DATATYPE(?notation) AS ?codeList)
+  # Each authority table is stored in a named graph with the scheme's IRI;
+  # querying that graph directly is much faster than scanning all graphs.
+  GRAPH <http://publications.europa.eu/resource/authority/country> {
+    ?country skos:inScheme <http://publications.europa.eu/resource/authority/country> ;
+             skos:prefLabel ?label ;
+             skos:notation ?notation .
+    FILTER(LANG(?label) = "en")
+    BIND(DATATYPE(?notation) AS ?codeList)
+  }
 }
 ORDER BY ?label ?codeList
 LIMIT 500

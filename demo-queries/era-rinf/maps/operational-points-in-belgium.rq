@@ -1,13 +1,25 @@
 #+ name: Map: operational points in Belgium
-#+ description: Operational points with their WKT geometry, ready for the Geo plugin. The geometry is looked up generically (any geo:wktLiteral one or two hops away), so it works whatever geometry property the graph uses.
+#+ description: Belgian operational points as WKT points for the Geo plugin. The coordinates are found generically (WKT literal, WKT string or WGS84 lat/long, on the point or on a linked geometry node).
 PREFIX era:  <http://data.europa.eu/949/>
 PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
+PREFIX wgs:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
 PREFIX country: <http://publications.europa.eu/resource/authority/country/>
 
 SELECT ?op ?name ?wkt WHERE {
   ?op a era:OperationalPoint ;
       era:inCountry country:BEL ;
       era:opName ?name .
-  { ?op ?p ?wkt . } UNION { ?op ?p ?geometry . ?geometry ?q ?wkt . }
-  FILTER(DATATYPE(?wkt) = geo:wktLiteral)
+  {
+    # WKT (typed or plain string) on the resource or on a linked geometry node
+    { ?op ?xyP ?xyWkt . } UNION { ?op ?xyP ?xyG . ?xyG ?xyQ ?xyWkt . }
+    FILTER(isLiteral(?xyWkt) && REGEX(STR(?xyWkt), "POINT\\s*\\(", "i"))
+    BIND(REPLACE(STR(?xyWkt), "^.*POINT\\s*\\(\\s*([-0-9.eE]+)\\s+([-0-9.eE]+).*$", "$1 $2", "i") AS ?xy)
+  } UNION {
+    # W3C WGS84 lat/long, directly or via a location node
+    { ?op wgs:lat ?xyLat ; wgs:long ?xyLong . }
+    UNION { ?op ?xyP ?xyG . ?xyG wgs:lat ?xyLat ; wgs:long ?xyLong . }
+    BIND(CONCAT(STR(?xyLong), " ", STR(?xyLat)) AS ?xy)
+  }
+  BIND(STRDT(CONCAT("POINT(", ?xy, ")"), geo:wktLiteral) AS ?wkt)
 }

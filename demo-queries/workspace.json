@@ -10,7 +10,7 @@
     "data-europa": "https://data.europa.eu/sparql",
     "wikidata": "https://query.wikidata.org/sparql",
     "dbpedia": "https://dbpedia.org/sparql",
-    "osm": "https://qlever.cs.uni-freiburg.de/api/osm-planet",
+    "osm": "https://qlever.dev/api/osm-planet",
     "uniprot": "https://sparql.uniprot.org/sparql",
     "getty": "https://vocab.getty.edu/sparql",
     "agrovoc": "https://agrovoc.fao.org/sparql"

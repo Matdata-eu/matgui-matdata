@@ -374,10 +374,10 @@ def run_query(endpoint: str, text: str, form: str, timeout: int) -> tuple[bool, 
             if exc.code in (301, 302, 303, 307, 308) and location:
                 # urllib does not re-POST on 307/308; follow manually and report the new URL
                 url = urllib.parse.urljoin(url, location)
-                note = f" (redirected to {url})"
+                note += f" (redirected to {url})"
                 continue
             if exc.code in (403, 405) and method == "POST":
-                method, note = "GET", " (via GET)"
+                method, note = "GET", note + " (via GET)"
                 continue
             detail = exc.read().decode("utf-8", "replace").strip().splitlines()
             reason = (detail[0] if detail else str(exc.reason))[:200]
