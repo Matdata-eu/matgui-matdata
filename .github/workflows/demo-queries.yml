@@ -21,9 +21,6 @@ on:
       - "demo-queries/**"
       - "scripts/demo_queries.py"
       - ".github/workflows/demo-queries.yml"
-  schedule:
-    # Nightly re-publish resets any changes made to the demo dataset
-    - cron: "17 3 * * *"
   workflow_dispatch:
     inputs:
       smoke_test:
