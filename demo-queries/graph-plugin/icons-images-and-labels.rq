@@ -1,0 +1,38 @@
+#+ name: Icons, images and labels
+#+ description: Self-contained tour of the Graph plugin: rdfs:label sets the node text, schema:icon puts an emoji on a node, schema:image renders a picture, and rdf:type objects are drawn as orange class nodes.
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+PREFIX ex:     <https://example.org/demo#>
+
+CONSTRUCT {
+  # Classes get an emoji via schema:icon
+  ex:Country schema:icon "🏳️" .
+  ex:City    schema:icon "🏙️" .
+  ex:Station schema:icon "🚉" .
+
+  # Countries are drawn with their flag via schema:image
+  ?country a ex:Country ;
+           rdfs:label ?countryName ;
+           schema:image ?flag .
+  ?city a ex:City ;
+        rdfs:label ?cityName ;
+        ex:inCountry ?country .
+  ?station a ex:Station ;
+           rdfs:label ?stationName ;
+           ex:serves ?city ;
+           ex:openedIn ?opened .
+}
+WHERE {
+  VALUES (?countryName ?flagFile ?cityName ?stationName ?opened) {
+    ("Belgium"     "Flag_of_Belgium.svg"     "Brussels"  "Brussels-South"     1869)
+    ("Belgium"     "Flag_of_Belgium.svg"     "Antwerp"   "Antwerp-Central"    1905)
+    ("Netherlands" "Flag_of_the_Netherlands.svg" "Rotterdam" "Rotterdam Centraal" 1957)
+    ("France"      "Flag_of_France.svg"      "Paris"     "Paris-Nord"         1846)
+    ("Germany"     "Flag_of_Germany.svg"     "Cologne"   "Köln Hbf"           1859)
+  }
+  BIND(IRI(CONCAT(STR(ex:), "country/", ENCODE_FOR_URI(?countryName))) AS ?country)
+  BIND(IRI(CONCAT(STR(ex:), "city/", ENCODE_FOR_URI(?cityName)))       AS ?city)
+  BIND(IRI(CONCAT(STR(ex:), "station/", ENCODE_FOR_URI(?stationName))) AS ?station)
+  BIND(IRI(CONCAT("http://commons.wikimedia.org/wiki/Special:FilePath/", ?flagFile)) AS ?flag)
+}

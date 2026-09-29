@@ -1,0 +1,23 @@
+#+ name: Nobel physics laureates and their advisors
+#+ description: Wikidata: Nobel Prize in Physics laureates whose doctoral advisor was also a laureate, with portraits. A family tree of physics.
+#+ endpoint: wikidata
+PREFIX wd:     <http://www.wikidata.org/entity/>
+PREFIX wdt:    <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+PREFIX ex:     <https://example.org/nobel#>
+
+CONSTRUCT {
+  ?student ex:doctoralAdvisor ?advisor .
+  ?student rdfs:label ?studentName ; schema:image ?studentImage .
+  ?advisor rdfs:label ?advisorName ; schema:image ?advisorImage .
+}
+WHERE {
+  ?student wdt:P166 wd:Q38104 ;
+           wdt:P184 ?advisor .
+  ?advisor wdt:P166 wd:Q38104 .
+  ?student rdfs:label ?studentName . FILTER(LANG(?studentName) = "en")
+  ?advisor rdfs:label ?advisorName . FILTER(LANG(?advisorName) = "en")
+  OPTIONAL { ?student wdt:P18 ?studentImage }
+  OPTIONAL { ?advisor wdt:P18 ?advisorImage }
+}

@@ -1,0 +1,22 @@
+#+ name: ERA + Publications Office: multilingual country names
+#+ description: Network length per country from ERA RINF, labelled with the country names in English, French and German from the EU country authority table at the Publications Office.
+PREFIX era:  <http://data.europa.eu/949/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?country ?en ?fr ?de ?sectionsOfLine ?totalLength WHERE {
+  SERVICE <https://graph.data.era.europa.eu/repositories/rinf-plus> {
+    SELECT ?country (COUNT(?sol) AS ?sectionsOfLine) (ROUND(SUM(?length)) AS ?totalLength) WHERE {
+      ?sol a era:SectionOfLine ;
+           era:inCountry ?country ;
+           era:lengthOfSectionOfLine ?length .
+    }
+    GROUP BY ?country
+  }
+  SERVICE <https://publications.europa.eu/webapi/rdf/sparql> {
+    GRAPH <http://publications.europa.eu/resource/authority/country> {
+      ?country skos:prefLabel ?en, ?fr, ?de .
+      FILTER(LANG(?en) = "en" && LANG(?fr) = "fr" && LANG(?de) = "de")
+    }
+  }
+}
+ORDER BY DESC(?totalLength)

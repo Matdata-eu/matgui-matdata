@@ -1,0 +1,28 @@
+#+ name: Wikidata + UniProt: genes and their proteins
+#+ description: Looks up a few human genes in Wikidata, follows the UniProt ID (P352) of the encoded protein and fetches its mnemonic and sequence length from UniProt.
+PREFIX wd:   <http://www.wikidata.org/entity/>
+PREFIX wdt:  <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX up:   <http://purl.uniprot.org/core/>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?symbol ?proteinLabel ?uniprot ?mnemonic ?length WHERE {
+  SERVICE <https://query.wikidata.org/sparql> {
+    SELECT ?symbol ?proteinLabel ?uniprotId WHERE {
+      VALUES ?symbol { "BRCA1" "TP53" "EGFR" "INS" "HBB" }
+      ?gene wdt:P353 ?symbol ;
+            wdt:P703 wd:Q15978631 ;
+            wdt:P688 ?protein .
+      ?protein wdt:P352 ?uniprotId ;
+               rdfs:label ?proteinLabel .
+      FILTER(LANG(?proteinLabel) = "en")
+    }
+  }
+  BIND(IRI(CONCAT("http://purl.uniprot.org/uniprot/", ?uniprotId)) AS ?uniprot)
+  SERVICE <https://sparql.uniprot.org/sparql> {
+    ?uniprot up:mnemonic ?mnemonic ;
+             up:sequence/rdf:value ?sequence .
+  }
+  BIND(STRLEN(?sequence) AS ?length)
+}
+ORDER BY ?symbol

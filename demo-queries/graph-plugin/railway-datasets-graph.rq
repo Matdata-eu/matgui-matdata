@@ -1,0 +1,39 @@
+#+ name: Railway datasets, publishers and formats
+#+ description: data.europa.eu: ten datasets tagged 'railway' with their publisher, distributions and file formats, each class with its own emoji.
+#+ endpoint: data-europa
+PREFIX dcat:   <http://www.w3.org/ns/dcat#>
+PREFIX dct:    <http://purl.org/dc/terms/>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+
+CONSTRUCT {
+  dcat:Dataset      schema:icon "📦" .
+  dcat:Distribution schema:icon "📄" .
+  foaf:Agent        schema:icon "🏢" .
+
+  ?dataset a dcat:Dataset ;
+           rdfs:label ?title ;
+           dct:publisher ?publisher ;
+           dcat:distribution ?distribution .
+  ?publisher a foaf:Agent ; rdfs:label ?publisherName .
+  ?distribution a dcat:Distribution ; dct:format ?format .
+}
+WHERE {
+  {
+    SELECT DISTINCT ?dataset WHERE {
+      ?dataset dcat:keyword "railway"@en ;
+               dct:publisher ?p ;
+               dcat:distribution ?d .
+    }
+    LIMIT 10
+  }
+  ?dataset dct:title ?title .
+  FILTER(LANGMATCHES(LANG(?title), "en"))
+  ?dataset dct:publisher ?publisher .
+  OPTIONAL { ?publisher foaf:name ?publisherName }
+  OPTIONAL {
+    ?dataset dcat:distribution ?distribution .
+    OPTIONAL { ?distribution dct:format ?format }
+  }
+}

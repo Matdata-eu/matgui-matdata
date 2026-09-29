@@ -1,0 +1,27 @@
+#+ name: EU member states and their neighbours
+#+ description: Wikidata: EU member states linked to the member states they share a border with, each node drawn with its flag (schema:image).
+#+ endpoint: wikidata
+PREFIX wd:     <http://www.wikidata.org/entity/>
+PREFIX wdt:    <http://www.wikidata.org/prop/direct/>
+PREFIX p:      <http://www.wikidata.org/prop/>
+PREFIX ps:     <http://www.wikidata.org/prop/statement/>
+PREFIX pq:     <http://www.wikidata.org/prop/qualifier/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+PREFIX ex:     <https://example.org/eu#>
+
+CONSTRUCT {
+  ?country ex:bordersWith ?neighbour ;
+           rdfs:label ?label ;
+           schema:image ?flag .
+}
+WHERE {
+  # current EU members (membership without end date)
+  ?country p:P463 ?m1 . ?m1 ps:P463 wd:Q458 . FILTER NOT EXISTS { ?m1 pq:P582 ?end1 }
+  ?neighbour p:P463 ?m2 . ?m2 ps:P463 wd:Q458 . FILTER NOT EXISTS { ?m2 pq:P582 ?end2 }
+  ?country wdt:P47 ?neighbour ;
+           wdt:P41 ?flag ;
+           rdfs:label ?label .
+  FILTER(LANG(?label) = "en")
+  FILTER(STR(?country) < STR(?neighbour))   # one edge per pair
+}

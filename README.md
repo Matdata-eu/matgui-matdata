@@ -97,7 +97,7 @@ The MatGUI instance can be configured in `src/main.js`. See the [MatGUI document
 
 ## Demo Queries
 
-The site ships with a read-only **"MatGUI demo queries"** workspace: over 100 ready-to-run queries for ERA RINF, the EU Publications Office (authority tables, EuroVoc, Cellar), data.europa.eu, GeoSPARQL on Apache Jena, Wikidata, DBpedia, OpenStreetMap (QLever), UniProt, Getty, AGROVOC and LOV. Open them with the **Demo queries** link in the footer or from the query browser.
+The site ships with a read-only **"MatGUI demo queries"** workspace: over 100 ready-to-run queries for ERA RINF, the EU Publications Office (authority tables, EuroVoc, Cellar), data.europa.eu, GeoSPARQL on Apache Jena, Wikidata, DBpedia, OpenStreetMap (QLever), UniProt, Getty and AGROVOC, plus CONSTRUCT queries that show off the Graph plugin (icons, images, compact mode, node expansion) and federated queries that combine several endpoints with `SERVICE`. Open them with the **Demo queries** link in the footer or from the query browser.
 
 The queries are plain `.rq` files in [`demo-queries/`](demo-queries). Each sub-directory is a workspace folder; folder labels, default endpoints and endpoint aliases are defined in [`demo-queries/workspace.json`](demo-queries/workspace.json). Every file starts with a small header:
 

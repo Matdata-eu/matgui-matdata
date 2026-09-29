@@ -34,6 +34,8 @@
     "data-europa-eu/authority-tables": { "label": "Authority tables (SKOS)" },
 
     "geosparql": { "label": "GeoSPARQL (Apache Jena)", "endpoint": "demo" },
+    "graph-plugin": { "label": "Graph plugin (CONSTRUCT)", "endpoint": "demo" },
+    "federated": { "label": "Federated queries (SERVICE)", "endpoint": "demo" },
 
     "wikidata": { "label": "Wikidata", "endpoint": "wikidata" },
     "dbpedia": { "label": "DBpedia", "endpoint": "dbpedia" },

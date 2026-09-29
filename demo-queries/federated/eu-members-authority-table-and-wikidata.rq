@@ -1,0 +1,30 @@
+#+ name: Wikidata + Publications Office: EU members and their official codes
+#+ description: EU member states and their capital from Wikidata, joined with the official EU country authority table (Publications Office) for its code and Dutch name.
+PREFIX wd:   <http://www.wikidata.org/entity/>
+PREFIX wdt:  <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX p:    <http://www.wikidata.org/prop/>
+PREFIX ps:   <http://www.wikidata.org/prop/statement/>
+PREFIX pq:   <http://www.wikidata.org/prop/qualifier/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+
+SELECT ?code ?countryWikidata ?capital ?nameInAuthorityTable ?authorityConcept WHERE {
+  SERVICE <https://query.wikidata.org/sparql> {
+    SELECT ?code ?countryWikidata ?capital WHERE {
+      ?item p:P463 ?membership ; wdt:P298 ?code .
+      ?membership ps:P463 wd:Q458 .
+      FILTER NOT EXISTS { ?membership pq:P582 ?left }
+      ?item rdfs:label ?countryWikidata . FILTER(LANG(?countryWikidata) = "en")
+      OPTIONAL { ?item wdt:P36/rdfs:label ?capital . FILTER(LANG(?capital) = "en") }
+    }
+  }
+  BIND(IRI(CONCAT("http://publications.europa.eu/resource/authority/country/", ?code)) AS ?authorityConcept)
+  SERVICE <https://publications.europa.eu/webapi/rdf/sparql> {
+    GRAPH <http://publications.europa.eu/resource/authority/country> {
+      ?authorityConcept skos:prefLabel ?nameInAuthorityTable .
+      FILTER(LANG(?nameInAuthorityTable) = "nl")
+    }
+  }
+}
+ORDER BY ?code

@@ -1,0 +1,31 @@
+#+ name: Railway network around Brussels
+#+ description: ERA RINF: sections of line touching Brussels with their operational points, typed and with emoji per class. Try Compact mode, and double-click a node to expand it with a DESCRIBE query.
+#+ endpoint: era
+PREFIX era:    <http://data.europa.eu/949/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+PREFIX country: <http://publications.europa.eu/resource/authority/country/>
+
+CONSTRUCT {
+  era:OperationalPoint schema:icon "🚉" .
+  era:SectionOfLine    schema:icon "🛤️" .
+
+  ?sol a era:SectionOfLine ;
+       rdfs:label ?solLabel ;
+       era:opStart ?start ;
+       era:opEnd ?end ;
+       era:lengthOfSectionOfLine ?length .
+  ?start a era:OperationalPoint ; rdfs:label ?startName .
+  ?end   a era:OperationalPoint ; rdfs:label ?endName .
+}
+WHERE {
+  ?sol a era:SectionOfLine ;
+       era:inCountry country:BEL ;
+       era:opStart ?start ;
+       era:opEnd ?end .
+  ?start era:opName ?startName .
+  ?end   era:opName ?endName .
+  FILTER(CONTAINS(LCASE(STR(?startName)), "brussel") || CONTAINS(LCASE(STR(?endName)), "brussel"))
+  OPTIONAL { ?sol era:lengthOfSectionOfLine ?length }
+  BIND(CONCAT(STR(?startName), " - ", STR(?endName)) AS ?solLabel)
+}

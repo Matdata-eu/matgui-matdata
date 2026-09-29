@@ -1,0 +1,26 @@
+#+ name: Who influenced whom: philosophers
+#+ description: DBpedia: influence network between well-known philosophers, with their Wikipedia thumbnails as node images.
+#+ endpoint: dbpedia
+PREFIX dbo:    <http://dbpedia.org/ontology/>
+PREFIX dbr:    <http://dbpedia.org/resource/>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+
+CONSTRUCT {
+  ?a dbo:influencedBy ?b .
+  ?a rdfs:label ?aName ; schema:image ?aImage .
+  ?b rdfs:label ?bName ; schema:image ?bImage .
+}
+WHERE {
+  VALUES ?a { dbr:Plato dbr:Aristotle dbr:René_Descartes dbr:Baruch_Spinoza dbr:John_Locke dbr:David_Hume
+              dbr:Immanuel_Kant dbr:Georg_Wilhelm_Friedrich_Hegel dbr:Arthur_Schopenhauer
+              dbr:Karl_Marx dbr:Friedrich_Nietzsche dbr:Ludwig_Wittgenstein }
+  VALUES ?b { dbr:Plato dbr:Aristotle dbr:René_Descartes dbr:Baruch_Spinoza dbr:John_Locke dbr:David_Hume
+              dbr:Immanuel_Kant dbr:Georg_Wilhelm_Friedrich_Hegel dbr:Arthur_Schopenhauer
+              dbr:Karl_Marx dbr:Friedrich_Nietzsche dbr:Ludwig_Wittgenstein }
+  ?a dbo:influencedBy|^dbo:influenced ?b .
+  ?a rdfs:label ?aName . FILTER(LANG(?aName) = "en")
+  ?b rdfs:label ?bName . FILTER(LANG(?bName) = "en")
+  OPTIONAL { ?a dbo:thumbnail ?aImage }
+  OPTIONAL { ?b dbo:thumbnail ?bImage }
+}

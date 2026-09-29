@@ -1,0 +1,33 @@
+#+ name: Compact mode: class icons on resources
+#+ description: Open the Graph tab, then switch on Compact mode in the settings panel: class and literal nodes disappear and each resource inherits the emoji of its class (also via rdfs:subClassOf).
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+PREFIX ex:     <https://example.org/rail#>
+
+CONSTRUCT {
+  ex:Train          schema:icon "🚆" .
+  ex:HighSpeedTrain rdfs:subClassOf ex:Train .
+  ex:Freight        rdfs:subClassOf ex:Train ; schema:icon "🚛" .
+  ex:Station        schema:icon "🚉" .
+
+  ?train a ?class ;
+         rdfs:label ?trainName ;
+         ex:departsFrom ?from ;
+         ex:arrivesAt ?to ;
+         ex:maxSpeed ?speed .
+  ?from a ex:Station ; rdfs:label ?fromName .
+  ?to   a ex:Station ; rdfs:label ?toName .
+}
+WHERE {
+  VALUES (?trainName ?class ?fromName ?toName ?speed) {
+    ("Eurostar 9114" ex:HighSpeedTrain "Brussels-South" "London St Pancras" 300)
+    ("ICE 15"        ex:HighSpeedTrain "Brussels-South" "Frankfurt Hbf"     300)
+    ("IC 3033"       ex:Train          "Brussels-South" "Antwerp-Central"   160)
+    ("IC 2133"       ex:Train          "Antwerp-Central" "Rotterdam Centraal" 160)
+    ("Freight 47512" ex:Freight        "Antwerp-Central" "Köln Hbf"          100)
+  }
+  BIND(IRI(CONCAT(STR(ex:), "train/", ENCODE_FOR_URI(?trainName))) AS ?train)
+  BIND(IRI(CONCAT(STR(ex:), "station/", ENCODE_FOR_URI(?fromName))) AS ?from)
+  BIND(IRI(CONCAT(STR(ex:), "station/", ENCODE_FOR_URI(?toName)))   AS ?to)
+}
