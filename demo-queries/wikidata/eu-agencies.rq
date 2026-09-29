@@ -7,7 +7,8 @@ PREFIX bd:       <http://www.bigdata.com/rdf#>
 PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?agency ?agencyLabel ?seatLabel ?founded WHERE {
-  ?agency wdt:P31/wdt:P279* wd:Q1377535 .
+  ?agencyClass rdfs:label "agency of the European Union"@en .
+  ?agency wdt:P31 ?agencyClass .
   OPTIONAL { ?agency wdt:P159 ?seat }
   OPTIONAL { ?agency wdt:P571 ?founded }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr,de,nl". }

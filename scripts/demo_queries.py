@@ -168,6 +168,25 @@ def load_queries() -> tuple[dict, dict[str, Folder], list[DemoQuery]]:
 # --------------------------------------------------------------------------- validate
 
 
+def strip_literals_and_iris(text: str) -> str:
+    text = re.sub(r'"""[\s\S]*?"""', '""', text)
+    text = re.sub(r'"(?:[^"\\\n]|\\.)*"', '""', text)
+    text = re.sub(r"'(?:[^'\\\n]|\\.)*'", "''", text)
+    text = re.sub(r"<[^<>\s]*>", "<>", text)
+    return re.sub(r"#[^\n]*", "", text)
+
+
+def declared_prefixes(text: str) -> set[str]:
+    return set(re.findall(r"PREFIX\s+([A-Za-z][\w.-]*)?:", text, re.IGNORECASE))
+
+
+def used_prefixes(text: str) -> set[str]:
+    # rdflib silently predeclares rdf:, rdfs:, xsd:, ... but most endpoints do not,
+    # so require every prefix to be declared explicitly.
+    body = re.sub(r"PREFIX\s+[\w.-]*:", "", strip_literals_and_iris(text), flags=re.IGNORECASE)
+    return set(re.findall(r"(?<![\w?$:.-])([A-Za-z][\w-]*):", body))
+
+
 def validate(args: argparse.Namespace) -> int:
     from rdflib.plugins.sparql import prepareQuery
 
@@ -198,6 +217,10 @@ def validate(args: argparse.Namespace) -> int:
         if q.name and key in seen_labels:
             errors.append(f"{where}: duplicate name '{q.name}' in folder (also {seen_labels[key]})")
         seen_labels[key] = where
+
+        undeclared = sorted(used_prefixes(q.text) - declared_prefixes(q.text))
+        if undeclared:
+            errors.append(f"{where}: undeclared prefix(es) {undeclared}")
 
         try:
             prepareQuery(q.text)
@@ -326,23 +349,44 @@ def run_query(endpoint: str, text: str, form: str, timeout: int) -> tuple[bool, 
         "SELECT": "application/sparql-results+json",
         "ASK": "application/sparql-results+json",
     }.get(form, "application/n-triples, text/turtle;q=0.9")
-    data = urllib.parse.urlencode({"query": text}).encode("utf-8")
-    req = urllib.request.Request(endpoint, data=data, method="POST", headers={
-        "Accept": accept,
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "User-Agent": USER_AGENT,
-    })
+    headers = {"Accept": accept, "User-Agent": USER_AGENT}
+    encoded = urllib.parse.urlencode({"query": text})
     start = time.monotonic()
-    try:
+
+    def send(url: str, method: str):
+        if method == "GET":
+            sep = "&" if "?" in url else "?"
+            req = urllib.request.Request(f"{url}{sep}{encoded}", method="GET", headers=headers)
+        else:
+            req = urllib.request.Request(url, data=encoded.encode("utf-8"), method="POST", headers={
+                **headers, "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            })
         with urllib.request.urlopen(req, timeout=timeout) as res:
-            body = res.read()
-            elapsed = time.monotonic() - start
-            ctype = res.headers.get("Content-Type", "")
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", "replace").strip().splitlines()
-        return False, f"HTTP {exc.code}: {(detail[0] if detail else exc.reason)[:200]}", time.monotonic() - start
-    except Exception as exc:  # timeouts, DNS, TLS, ...
-        return False, f"{type(exc).__name__}: {exc}"[:200], time.monotonic() - start
+            return res.read(), res.headers.get("Content-Type", "")
+
+    url, method, note = endpoint, "POST", ""
+    for _ in range(3):
+        try:
+            body, ctype = send(url, method)
+            break
+        except urllib.error.HTTPError as exc:
+            location = exc.headers.get("Location")
+            if exc.code in (301, 302, 303, 307, 308) and location:
+                # urllib does not re-POST on 307/308; follow manually and report the new URL
+                url = urllib.parse.urljoin(url, location)
+                note = f" (redirected to {url})"
+                continue
+            if exc.code in (403, 405) and method == "POST":
+                method, note = "GET", " (via GET)"
+                continue
+            detail = exc.read().decode("utf-8", "replace").strip().splitlines()
+            reason = (detail[0] if detail else str(exc.reason))[:200]
+            return False, f"HTTP {exc.code}: {reason}{note}", time.monotonic() - start
+        except Exception as exc:  # timeouts, DNS, TLS, ...
+            return False, f"{type(exc).__name__}: {exc}"[:200] + note, time.monotonic() - start
+    else:
+        return False, f"too many redirects{note}", time.monotonic() - start
+    elapsed = time.monotonic() - start
 
     if form in ("SELECT", "ASK"):
         try:
@@ -350,13 +394,13 @@ def run_query(endpoint: str, text: str, form: str, timeout: int) -> tuple[bool, 
         except ValueError:
             return False, f"non-JSON response ({ctype})", elapsed
         if form == "ASK":
-            return True, f"boolean={parsed.get('boolean')}", elapsed
+            return True, f"boolean={parsed.get('boolean')}{note}", elapsed
         rows = len(parsed.get("results", {}).get("bindings", []))
-        return rows > 0, f"{rows} rows", elapsed
+        return rows > 0, f"{rows} rows{note}", elapsed
 
     triples = sum(1 for line in body.decode("utf-8", "replace").splitlines()
                   if line.strip() and not line.lstrip().startswith(("@prefix", "PREFIX", "#")))
-    return triples > 0, f"~{triples} lines of RDF", elapsed
+    return triples > 0, f"~{triples} lines of RDF{note}", elapsed
 
 
 def smoke_test(args: argparse.Namespace) -> int:

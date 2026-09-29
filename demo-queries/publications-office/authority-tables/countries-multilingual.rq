@@ -3,7 +3,7 @@
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dc:   <http://purl.org/dc/elements/1.1/>
 
-SELECT ?country ?code ?en ?fr ?de ?nl WHERE {
+SELECT DISTINCT ?country ?code ?en ?fr ?de ?nl WHERE {
   ?country skos:inScheme <http://publications.europa.eu/resource/authority/country> ;
            dc:identifier ?code .
   OPTIONAL { ?country skos:prefLabel ?en . FILTER(LANG(?en) = "en") }

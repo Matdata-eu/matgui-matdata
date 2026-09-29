@@ -13,8 +13,7 @@
     "osm": "https://qlever.cs.uni-freiburg.de/api/osm-planet",
     "uniprot": "https://sparql.uniprot.org/sparql",
     "getty": "https://vocab.getty.edu/sparql",
-    "agrovoc": "https://agrovoc.fao.org/sparql",
-    "lov": "https://lov.linkeddata.es/dataset/lov/sparql"
+    "agrovoc": "https://agrovoc.fao.org/sparql"
   },
   "folders": {
     "getting-started": { "label": "Getting started", "endpoint": "demo" },
@@ -41,7 +40,6 @@
     "openstreetmap": { "label": "OpenStreetMap (QLever)", "endpoint": "osm" },
     "life-sciences": { "label": "Life sciences (UniProt)", "endpoint": "uniprot" },
     "cultural-heritage": { "label": "Cultural heritage (Getty vocabularies)", "endpoint": "getty" },
-    "agriculture": { "label": "Agriculture (AGROVOC)", "endpoint": "agrovoc" },
-    "vocabularies": { "label": "Linked Open Vocabularies", "endpoint": "lov" }
+    "agriculture": { "label": "Agriculture (AGROVOC)", "endpoint": "agrovoc" }
   }
 }

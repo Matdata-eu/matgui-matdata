@@ -2,7 +2,7 @@
 #+ description: All preferred and alternative labels of one concept (Belgium) in every available language.
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?kind ?language ?label WHERE {
+SELECT DISTINCT ?kind ?language ?label WHERE {
   VALUES ?concept { <http://publications.europa.eu/resource/authority/country/BEL> }
   VALUES (?property ?kind) { (skos:prefLabel "preferred") (skos:altLabel "alternative") }
   ?concept ?property ?label .

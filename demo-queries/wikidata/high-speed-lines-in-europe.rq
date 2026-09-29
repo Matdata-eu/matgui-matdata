@@ -7,7 +7,8 @@ PREFIX bd:       <http://www.bigdata.com/rdf#>
 PREFIX rdfs:     <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?line ?lineLabel ?countryLabel ?length ?speed WHERE {
-  ?line wdt:P31/wdt:P279* wd:Q1323906 ;
+  ?lineClass rdfs:label "high-speed railway line"@en .
+  ?line wdt:P31 ?lineClass ;
         wdt:P17 ?country .
   ?country wdt:P30 wd:Q46 .
   OPTIONAL { ?line wdt:P2043 ?length }

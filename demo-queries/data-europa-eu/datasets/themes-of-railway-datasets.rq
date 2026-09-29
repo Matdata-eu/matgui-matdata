@@ -1,0 +1,17 @@
+#+ name: Themes of railway datasets
+#+ description: Which DCAT-AP data themes are used by datasets tagged 'railway'? Joins the catalogue with the data-theme code list for the labels.
+PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?theme (SAMPLE(?themeLabel) AS ?label) (COUNT(DISTINCT ?dataset) AS ?datasets) WHERE {
+  VALUES ?keyword { "railway"@en "railway" "railways"@en }
+  ?dataset dcat:keyword ?keyword ;
+           dcat:theme ?theme .
+  OPTIONAL {
+    GRAPH <http://publications.europa.eu/resource/authority/data-theme> {
+      ?theme skos:prefLabel ?themeLabel . FILTER(LANG(?themeLabel) = "en")
+    }
+  }
+}
+GROUP BY ?theme
+ORDER BY DESC(?datasets)

@@ -1,0 +1,10 @@
+#+ name: Labels of a resource in many languages
+#+ description: The rdfs:label of dbr:Brussels in every language DBpedia has, a quick way to see multilingual literals.
+PREFIX dbr:  <http://dbpedia.org/resource/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?language ?label WHERE {
+  dbr:Brussels rdfs:label ?label .
+  BIND(LANG(?label) AS ?language)
+}
+ORDER BY ?language

@@ -1,12 +1,12 @@
-#+ name: Top publishers of transport data
-#+ description: Organisations publishing the most datasets in the Transport theme.
+#+ name: Publishers of railway data
+#+ description: Organisations publishing datasets tagged 'railway', ranked by number of datasets.
 PREFIX dcat: <http://www.w3.org/ns/dcat#>
 PREFIX dct:  <http://purl.org/dc/terms/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX theme: <http://publications.europa.eu/resource/authority/data-theme/>
 
 SELECT ?publisher (SAMPLE(?name) AS ?publisherName) (COUNT(DISTINCT ?dataset) AS ?datasets) WHERE {
-  ?dataset dcat:theme theme:TRAN ;
+  VALUES ?keyword { "railway"@en "railway" "railways"@en }
+  ?dataset dcat:keyword ?keyword ;
            dct:publisher ?publisher .
   OPTIONAL { ?publisher foaf:name ?name }
 }

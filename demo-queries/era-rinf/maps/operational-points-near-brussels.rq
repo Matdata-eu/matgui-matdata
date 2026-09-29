@@ -1,15 +1,16 @@
 #+ name: Map: operational points around Brussels
-#+ description: Filters operational points on a bounding box by extracting longitude/latitude from the WKT string, so it works without a spatial index.
+#+ description: Filters Belgian operational points on a bounding box by extracting longitude/latitude from the WKT string, so it works without a spatial index.
 PREFIX era:  <http://data.europa.eu/949/>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX geo:  <http://www.opengis.net/ont/geosparql#>
 PREFIX xsd:  <http://www.w3.org/2001/XMLSchema#>
+PREFIX country: <http://publications.europa.eu/resource/authority/country/>
 
 SELECT ?op ?name ?wkt WHERE {
   ?op a era:OperationalPoint ;
-      era:opName ?name ;
-      geo:hasGeometry/geo:asWKT ?wkt .
+      era:inCountry country:BEL ;
+      era:opName ?name .
+  { ?op ?p ?wkt . } UNION { ?op ?p ?geometry . ?geometry ?q ?wkt . }
+  FILTER(DATATYPE(?wkt) = geo:wktLiteral)
   BIND(REPLACE(STR(?wkt), "^.*POINT\\s*\\(\\s*([-0-9.]+)\\s+([-0-9.]+).*$", "$1", "i") AS ?lonStr)
   BIND(REPLACE(STR(?wkt), "^.*POINT\\s*\\(\\s*([-0-9.]+)\\s+([-0-9.]+).*$", "$2", "i") AS ?latStr)
   BIND(xsd:decimal(?lonStr) AS ?lon)

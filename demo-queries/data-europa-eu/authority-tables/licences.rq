@@ -2,9 +2,10 @@
 #+ description: The licence authority table used to describe the licence of datasets and distributions.
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?licence ?label WHERE {
-  ?licence skos:inScheme <http://publications.europa.eu/resource/authority/licence> ;
-           skos:prefLabel ?label .
-  FILTER(LANG(?label) = "en")
+SELECT DISTINCT ?licence ?label WHERE {
+  GRAPH <http://publications.europa.eu/resource/authority/licence> {
+    ?licence a skos:Concept ;
+          skos:prefLabel ?label .
+    FILTER(LANG(?label) = "en")
+  }
 }
-ORDER BY ?label

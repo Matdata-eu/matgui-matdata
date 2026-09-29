@@ -3,7 +3,7 @@
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX dc:   <http://purl.org/dc/elements/1.1/>
 
-SELECT ?concept ?code ?label WHERE {
+SELECT DISTINCT ?concept ?code ?label WHERE {
   ?concept skos:inScheme <http://publications.europa.eu/resource/authority/corporate-body> ;
            skos:prefLabel ?label .
   FILTER(LANG(?label) = "en")
