@@ -487,6 +487,8 @@ if (typeof Yasgui !== "undefined") {
       type: "sparql",
       endpoint: "https://jena.matdata.eu/matgui-demo/sparql",
       workspaceIri: "https://matgui.matdata.eu/demo/workspace",
+      // Never offer to save (updates or new queries) to the demo workspace (MatGUI#187)
+      readOnly: true,
     };
     var REGISTERED_KEY = "matgui_demo_workspace_registered";
     var config = yasgui.persistentConfig;
