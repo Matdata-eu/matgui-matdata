@@ -296,6 +296,7 @@ if (typeof Yasgui !== "undefined") {
     // Set alternative SPARQL endpoint quick switch buttons
     endpointButtons: [      
       { endpoint: "https://graph.data.era.europa.eu/repositories/rinf-plus", label: "ERA" },
+      { endpoint: "https://rinf-ris-alignment.com/repositories/CRD", label: "CRD" },
       { endpoint: "https://data.europa.eu/sparql", label: "EU Data" },
       { endpoint: "https://query.wikidata.org/bigdata/namespace/wdq/sparql", label: "Wikidata" },
       { endpoint: "https://dbpedia.org/sparql", label: "DBpedia" }
@@ -319,6 +320,9 @@ if (typeof Yasgui !== "undefined") {
           //that you'd like to use when rendering)
           {
             endpoint: "https://graph.data.era.europa.eu/repositories/rinf-plus",
+          },
+          {
+            endpoint: "https://rinf-ris-alignment.com/repositories/CRD",
           },
           {
             endpoint: "https://data.europa.eu/sparql", 
