@@ -291,13 +291,15 @@ if (typeof Yasgui !== "undefined") {
   const yasgui = new Yasgui(document.getElementById("yasgui"), {
     // Set the SPARQL endpoint
     requestConfig: {
-      endpoint: "https://query.wikidata.org/bigdata/namespace/wdq/sparql",
+      endpoint: "https://graph.data.era.europa.eu/repositories/rinf-plus",
     },
     // Set alternative SPARQL endpoint quick switch buttons
     endpointButtons: [      
       { endpoint: "https://graph.data.era.europa.eu/repositories/rinf-plus", label: "ERA" },
       { endpoint: "https://rinf-ris-alignment.com/repositories/CRD", label: "CRD" },
       { endpoint: "https://data.europa.eu/sparql", label: "EU Data" },
+      { endpoint: "https://publications.europa.eu/webapi/rdf/sparql", label: "EU Publications" },
+      { endpoint: "https://qlever.dev/api/osm-planet", label: "OSM" },
       { endpoint: "https://query.wikidata.org/bigdata/namespace/wdq/sparql", label: "Wikidata" },
       { endpoint: "https://dbpedia.org/sparql", label: "DBpedia" }
     ],
@@ -328,10 +330,16 @@ if (typeof Yasgui !== "undefined") {
             endpoint: "https://data.europa.eu/sparql", 
           },          
           {
+            endpoint: "https://publications.europa.eu/webapi/rdf/sparql",
+          },
+          {
+            endpoint: "https://qlever.dev/api/osm-planet",
+          },
+          {
             endpoint: "https://dbpedia.org/sparql",
           },
           {
-            endpoint: "https://query.wikidata.org",
+            endpoint: "https://query.wikidata.org/bigdata/namespace/wdq/sparql",
           },
           // ...
         ];
