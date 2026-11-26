@@ -8,7 +8,7 @@ A simple, clean website to host **MatGUI** (a modern knowledge graph and SPARQL 
 
 - Clean and minimal MatGUI interface
 - No build process required - just HTML, CSS, and JavaScript
-- Easy deployment to GitHub Pages or any static hosting
+- Easy deployment to Cloudflare Pages, GitHub Pages or any static hosting
 - Pre-configured with popular SPARQL endpoints
 - Extended with graph visualization and geo plugins
 
@@ -31,11 +31,15 @@ The application comes pre-configured with the following SPARQL endpoints:
 
 This project demonstrates how to deploy MatGUI without Node.js or Docker - just plain HTML files served statically.
 
+### Deploy to Cloudflare Pages
+
+matgui.matdata.eu is served from Cloudflare Pages by the included workflow (`.github/workflows/deploy-cloudflare.yml`). It deploys `src/` on every push: `main` is the live site, and every other branch gets a preview at `https://<branch>.<project>.pages.dev`. Add the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets to use it in a fork.
+
 ### Deploy to GitHub Pages
 
 1. Fork or clone this repository
 2. Enable GitHub Pages in repository settings
-3. Set the source to the `main` branch and `/src` folder (or use the included GitHub Actions workflow)
+3. Set the source to the `main` branch and `/src` folder
 4. Your MatGUI instance will be available at `https://yourusername.github.io/repository-name/`
 
 ### Deploy to Any Static Host
