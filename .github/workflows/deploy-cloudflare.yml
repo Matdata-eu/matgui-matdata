@@ -18,6 +18,8 @@ concurrency:
 
 jobs:
   check:
+    # Only the main repository deploys; the yasgui-matdata mirror stays off Cloudflare.
+    if: github.repository == 'Matdata-eu/matgui-matdata'
     runs-on: ubuntu-latest
     outputs:
       enabled: ${{ steps.check.outputs.enabled }}
